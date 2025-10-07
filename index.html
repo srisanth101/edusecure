@@ -10,29 +10,30 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         :root {
-            --primary: #007AFF;
-            --primary-light: #5AC8FA;
-            --primary-dark: #0056CC;
-            --secondary: #8E8E93;
-            --success: #34C759;
-            --warning: #FF9500;
-            --danger: #FF3B30;
-            --background: #F2F2F7;
-            --card-bg: #FFFFFF;
-            --text: #000000;
-            --text-muted: #8E8E93;
-            --border: #C6C6C8;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --radius: 14px;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --accent: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
             --radius-full: 50%;
         }
 
         body {
-            background-color: var(--background);
+            background: linear-gradient(135deg, var(--background), #1e293b);
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -61,11 +62,12 @@
             justify-content: center;
             box-shadow: var(--shadow);
             overflow: hidden;
+            border: 3px solid var(--accent);
         }
 
         .logo img {
-            width: 70%;
-            height: 70%;
+            width: 80%;
+            height: 80%;
             border-radius: var(--radius-full);
             object-fit: cover;
         }
@@ -74,7 +76,7 @@
             font-size: 34px;
             font-weight: 700;
             margin-bottom: 10px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -101,12 +103,13 @@
             box-shadow: var(--shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
         }
 
         .portal-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-light);
         }
 
         .portal-icon {
@@ -142,6 +145,7 @@
             max-width: 500px;
             margin: 0 auto;
             display: none;
+            border: 1px solid var(--border);
         }
 
         .login-form.active {
@@ -168,17 +172,18 @@
         .form-control {
             width: 100%;
             padding: 16px;
-            background: var(--background);
+            background: rgba(30, 41, 59, 0.7);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
+            color: var(--text);
             font-size: 17px;
             transition: all 0.2s ease;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         .btn {
@@ -186,7 +191,7 @@
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 17px;
             font-weight: 600;
             cursor: pointer;
@@ -200,6 +205,7 @@
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .btn:active {
@@ -215,7 +221,15 @@
         }
 
         .btn-secondary:hover {
-            background: #6D6D72;
+            background: #475569;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #0da271;
         }
 
         .back-btn {
@@ -240,6 +254,7 @@
             background: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .user-info {
@@ -279,6 +294,7 @@
             padding: 8px;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .tab {
@@ -314,6 +330,7 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .card-header {
@@ -337,15 +354,17 @@
         }
 
         .student-card {
-            background: var(--background);
+            background: rgba(30, 41, 59, 0.7);
             border-radius: var(--radius);
             padding: 20px;
             text-align: center;
             transition: transform 0.2s ease;
+            border: 1px solid var(--border);
         }
 
         .student-card:hover {
             transform: translateY(-3px);
+            border-color: var(--primary-light);
         }
 
         .student-img {
@@ -360,6 +379,7 @@
             font-size: 30px;
             color: white;
             overflow: hidden;
+            border: 2px solid var(--primary-light);
         }
 
         .student-img img {
@@ -370,15 +390,16 @@
 
         .homework-item, .message-item {
             padding: 20px;
-            background: var(--background);
+            background: rgba(30, 41, 59, 0.7);
             border-radius: var(--radius);
             margin-bottom: 15px;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--primary-light);
+            border: 1px solid var(--border);
         }
 
         .homework-item h4, .message-item h4 {
             margin-bottom: 10px;
-            color: var(--primary);
+            color: var(--primary-light);
             font-size: 18px;
         }
 
@@ -395,42 +416,73 @@
             padding: 40px 20px;
         }
 
-        .face-scanner {
-            width: 200px;
-            height: 200px;
-            border-radius: var(--radius-full);
+        .camera-container {
+            width: 300px;
+            height: 300px;
             margin: 0 auto 30px;
-            background: var(--background);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            border: 3px solid var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        #cameraVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        #cameraCanvas {
+            display: none;
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
-            color: var(--primary);
-            border: 3px solid var(--primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .face-scanner::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: var(--radius-full);
-            box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3); }
-            50% { box-shadow: inset 0 0 30px rgba(0, 122, 255, 0.6); }
-            100% { box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3); }
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 18px;
+            z-index: 10;
         }
 
         .scanning-text {
             font-size: 18px;
             margin-bottom: 20px;
             color: var(--text-muted);
+        }
+
+        .class-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .class-option {
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .class-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .class-option.selected {
+            background: var(--primary);
+            border-color: var(--primary-light);
         }
 
         .footer {
@@ -440,52 +492,6 @@
             color: var(--text-muted);
             font-size: 15px;
             border-top: 1px solid var(--border);
-        }
-
-        /* iOS-style toggles and inputs */
-        .ios-toggle {
-            position: relative;
-            display: inline-block;
-            width: 51px;
-            height: 31px;
-        }
-
-        .ios-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .ios-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--border);
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .ios-slider:before {
-            position: absolute;
-            content: "";
-            height: 27px;
-            width: 27px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .ios-slider {
-            background-color: var(--primary);
-        }
-
-        input:checked + .ios-slider:before {
-            transform: translateX(20px);
         }
 
         /* Responsive adjustments */
@@ -512,6 +518,11 @@
             .tab {
                 white-space: nowrap;
             }
+            
+            .camera-container {
+                width: 250px;
+                height: 250px;
+            }
         }
     </style>
 </head>
@@ -519,7 +530,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgTLzzO8FQehQ0OZ0bQXYC3MzngI-QjMLhP-GBiQh_Kvb4GamrWYicmIHKtDtmvu_f5leLFiYTkDRVN4krpYPi3C_Ek6Gt7MqYD98FoB1D1mw-H00Zsui2P7C06J4PFfxAgmANu4Le2DgXQGm9lfAlQvEAHD6H9g6TYw6QEEcpG4eDVFD-0nF4c2EkFwjQ" alt="Educational Portal Logo">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiJY7J3N211LgvtEmXBQYBTrhyV4Msf-rXEkPr6Ns-BxAbOp-2rLh-V4MhUOj9pL0lhHjPbIbdYm7IxB3_wXggfa6hLq8iYu0e3NC9NThaTn61zBVjbFUgF3VPlYmS9BxqmolSzAQW1DYmUea5EiquLqysBntxklO7OQ6uBeZvCLLEkjaKnGaW7FMPakj0" alt="Educational Portal Logo">
             </div>
             <h1>Educational Portal</h1>
             <p class="subtitle">Connect, Learn, and Grow Together</p>
@@ -576,11 +587,19 @@
         <div class="login-form" id="studentLogin">
             <h2 style="margin-bottom: 20px; text-align: center;">Student Login</h2>
             <div class="face-scan-container">
-                <div class="face-scanner">
-                    <i class="fas fa-user"></i>
+                <div class="camera-container">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <canvas id="cameraCanvas" width="300" height="300"></canvas>
+                    <div class="scan-overlay" id="scanOverlay">
+                        <div>
+                            <i class="fas fa-camera" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <p>Camera access required</p>
+                        </div>
+                    </div>
                 </div>
-                <p class="scanning-text">Position your face in the frame for scanning</p>
+                <p class="scanning-text" id="scanStatus">Allow camera access to continue</p>
                 <button class="btn" id="startScanBtn">Start Face Scan</button>
+                <button class="btn btn-success" id="captureBtn" style="display: none;">Capture & Verify</button>
             </div>
             <button class="btn btn-secondary btn-block back-btn" id="backFromStudentLogin">Back</button>
         </div>
@@ -609,10 +628,42 @@
             <div class="tab-content active" id="studentsTab">
                 <div class="card">
                     <div class="card-header">
+                        <h3 class="card-title">Add Student Profile</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentImage">Student Image (Required for Face Recognition)</label>
+                        <input type="file" id="studentImage" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentName">Full Name</label>
+                        <input type="text" id="studentName" class="form-control" placeholder="Enter student full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentDob">Date of Birth</label>
+                        <input type="date" id="studentDob" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentAdmissionNo">Admission Number</label>
+                        <input type="text" id="studentAdmissionNo" class="form-control" placeholder="Enter admission number">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentRollNo">Roll Number</label>
+                        <input type="number" id="studentRollNo" class="form-control" placeholder="Enter roll number">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <div class="class-selection" id="studentClassSelection">
+                            <!-- Class options will be generated here -->
+                        </div>
+                    </div>
+                    <button class="btn btn-block" id="addStudentBtn">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                         <h3 class="card-title">Student Profiles</h3>
-                        <button class="btn" id="addStudentBtn">
-                            <i class="fas fa-plus"></i> Add Student
-                        </button>
                     </div>
                     <div class="student-grid" id="studentList">
                         <!-- Student cards will be dynamically added here -->
@@ -636,6 +687,12 @@
                     <div class="form-group">
                         <label for="homeworkDueDate">Due Date</label>
                         <input type="date" id="homeworkDueDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <div class="class-selection" id="homeworkClassSelection">
+                            <!-- Class options will be generated here -->
+                        </div>
                     </div>
                     <button class="btn btn-block" id="assignHomeworkBtn">Assign Homework</button>
                 </div>
@@ -662,6 +719,12 @@
                     <div class="form-group">
                         <label for="messageContent">Message Content</label>
                         <textarea id="messageContent" class="form-control" rows="4" placeholder="Enter your message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <div class="class-selection" id="messageClassSelection">
+                            <!-- Class options will be generated here -->
+                        </div>
                     </div>
                     <button class="btn btn-block" id="sendMessageBtn">Send Message</button>
                 </div>
@@ -731,11 +794,19 @@
                         <h3 class="card-title">Homework Access</h3>
                     </div>
                     <div class="face-scan-container">
-                        <div class="face-scanner">
-                            <i class="fas fa-user"></i>
+                        <div class="camera-container">
+                            <video id="studentCameraVideo" autoplay playsinline></video>
+                            <canvas id="studentCameraCanvas" width="300" height="300"></canvas>
+                            <div class="scan-overlay" id="studentScanOverlay">
+                                <div>
+                                    <i class="fas fa-camera" style="font-size: 40px; margin-bottom: 10px;"></i>
+                                    <p>Camera access required</p>
+                                </div>
+                            </div>
                         </div>
-                        <p class="scanning-text">Face scan required to view homework</p>
-                        <button class="btn" id="homeworkScanBtn">Scan Face to View Homework</button>
+                        <p class="scanning-text" id="studentScanStatus">Face scan required to view homework</p>
+                        <button class="btn" id="homeworkScanBtn">Start Face Scan</button>
+                        <button class="btn btn-success" id="studentCaptureBtn" style="display: none;">Capture & Verify</button>
                     </div>
                 </div>
 
@@ -785,6 +856,19 @@
         const startScanBtn = document.getElementById('startScanBtn');
         const homeworkScanBtn = document.getElementById('homeworkScanBtn');
         
+        // Camera elements
+        const cameraVideo = document.getElementById('cameraVideo');
+        const cameraCanvas = document.getElementById('cameraCanvas');
+        const scanOverlay = document.getElementById('scanOverlay');
+        const scanStatus = document.getElementById('scanStatus');
+        const captureBtn = document.getElementById('captureBtn');
+        
+        const studentCameraVideo = document.getElementById('studentCameraVideo');
+        const studentCameraCanvas = document.getElementById('studentCameraCanvas');
+        const studentScanOverlay = document.getElementById('studentScanOverlay');
+        const studentScanStatus = document.getElementById('studentScanStatus');
+        const studentCaptureBtn = document.getElementById('studentCaptureBtn');
+        
         // Logout buttons
         const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
         const studentLogoutBtn = document.getElementById('studentLogoutBtn');
@@ -805,23 +889,106 @@
         const studentHomeworkList = document.getElementById('studentHomeworkList');
         const studentMessageList = document.getElementById('studentMessageList');
         const homeworkContent = document.getElementById('homeworkContent');
+        
+        // Class selection elements
+        const studentClassSelection = document.getElementById('studentClassSelection');
+        const homeworkClassSelection = document.getElementById('homeworkClassSelection');
+        const messageClassSelection = document.getElementById('messageClassSelection');
 
-        // Sample data
-        let students = [
-            { id: 1, name: "Rahul Sharma", dob: "15-05-2007", admissionNo: "KV202015", rollNo: 15, class: "10A" },
-            { id: 2, name: "Priya Patel", dob: "22-08-2007", admissionNo: "KV202022", rollNo: 22, class: "10A" },
-            { id: 3, name: "Amit Kumar", dob: "10-03-2007", admissionNo: "KV202010", rollNo: 10, class: "10A" }
+        // Generate class options (1st to 12th, sections A, B, C)
+        function generateClassOptions(container) {
+            container.innerHTML = '';
+            for (let grade = 1; grade <= 12; grade++) {
+                for (let section of ['A', 'B', 'C']) {
+                    const classOption = document.createElement('div');
+                    classOption.className = 'class-option';
+                    classOption.textContent = `${grade}${section}`;
+                    classOption.dataset.class = `${grade}${section}`;
+                    classOption.addEventListener('click', () => {
+                        // Deselect all other options in this container
+                        container.querySelectorAll('.class-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        // Select this option
+                        classOption.classList.add('selected');
+                    });
+                    container.appendChild(classOption);
+                }
+            }
+        }
+
+        // Sample data - using localStorage for persistence
+        let students = JSON.parse(localStorage.getItem('students')) || [
+            { id: 1, name: "Rahul Sharma", dob: "2007-05-15", admissionNo: "KV202015", rollNo: 15, class: "10A", image: null },
+            { id: 2, name: "Priya Patel", dob: "2007-08-22", admissionNo: "KV202022", rollNo: 22, class: "10A", image: null },
+            { id: 3, name: "Amit Kumar", dob: "2007-03-10", admissionNo: "KV202010", rollNo: 10, class: "10A", image: null }
         ];
 
-        let homeworks = [
-            { id: 1, title: "Math Assignment", description: "Complete exercises 5.1 to 5.5 from textbook", dueDate: "2023-10-15", assignedDate: "2023-10-10", viewedBy: [1] },
-            { id: 2, title: "Science Project", description: "Prepare a model of solar system with proper labels", dueDate: "2023-10-20", assignedDate: "2023-10-12", viewedBy: [1, 2] }
+        let homeworks = JSON.parse(localStorage.getItem('homeworks')) || [
+            { id: 1, title: "Math Assignment", description: "Complete exercises 5.1 to 5.5 from textbook", dueDate: "2023-10-15", assignedDate: "2023-10-10", class: "10A", viewedBy: [1] },
+            { id: 2, title: "Science Project", description: "Prepare a model of solar system with proper labels", dueDate: "2023-10-20", assignedDate: "2023-10-12", class: "10A", viewedBy: [1, 2] }
         ];
 
-        let messages = [
-            { id: 1, title: "Parent-Teacher Meeting", content: "There will be a parent-teacher meeting on 25th October 2023.", date: "2023-10-05" },
-            { id: 2, title: "School Holiday", content: "School will remain closed on 2nd November 2023 for Diwali celebration.", date: "2023-10-08" }
+        let messages = JSON.parse(localStorage.getItem('messages')) || [
+            { id: 1, title: "Parent-Teacher Meeting", content: "There will be a parent-teacher meeting on 25th October 2023.", date: "2023-10-05", class: "10A" },
+            { id: 2, title: "School Holiday", content: "School will remain closed on 2nd November 2023 for Diwali celebration.", date: "2023-10-08", class: "10A" }
         ];
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('students', JSON.stringify(students));
+            localStorage.setItem('homeworks', JSON.stringify(homeworks));
+            localStorage.setItem('messages', JSON.stringify(messages));
+        }
+
+        // Camera functions
+        let stream = null;
+        let studentStream = null;
+
+        async function startCamera(videoElement, overlayElement) {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'user',
+                        width: { ideal: 300 },
+                        height: { ideal: 300 }
+                    } 
+                });
+                videoElement.srcObject = stream;
+                overlayElement.style.display = 'none';
+                return true;
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                overlayElement.querySelector('p').textContent = 'Camera access denied';
+                return false;
+            }
+        }
+
+        function stopCamera(videoElement) {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            videoElement.srcObject = null;
+        }
+
+        function captureImage(videoElement, canvasElement) {
+            const context = canvasElement.getContext('2d');
+            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+            return canvasElement.toDataURL('image/png');
+        }
+
+        // Simple face recognition simulation
+        function verifyFace(capturedImage, studentId) {
+            // In a real app, this would use a proper face recognition API
+            // For this demo, we'll just simulate verification
+            const student = students.find(s => s.id === studentId);
+            if (student && student.image) {
+                // Simulate face matching (in reality, this would compare facial features)
+                return Math.random() > 0.3; // 70% success rate for demo
+            }
+            return false;
+        }
 
         // Event Listeners
         teacherPortalBtn.addEventListener('click', () => {
@@ -842,6 +1009,7 @@
         backFromStudentLogin.addEventListener('click', () => {
             studentLogin.classList.remove('active');
             portalSelection.style.display = 'grid';
+            stopCamera(cameraVideo);
         });
 
         teacherLoginBtn.addEventListener('click', () => {
@@ -852,39 +1020,79 @@
                 renderStudents();
                 renderHomeworks();
                 renderMessages();
+                generateClassOptions(studentClassSelection);
+                generateClassOptions(homeworkClassSelection);
+                generateClassOptions(messageClassSelection);
             } else {
                 alert('Incorrect password. Please try again.');
             }
         });
 
-        startScanBtn.addEventListener('click', () => {
-            // Simulate face scanning process
-            startScanBtn.disabled = true;
-            startScanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
-            
+        startScanBtn.addEventListener('click', async () => {
+            const success = await startCamera(cameraVideo, scanOverlay);
+            if (success) {
+                scanStatus.textContent = 'Position your face in the frame';
+                startScanBtn.style.display = 'none';
+                captureBtn.style.display = 'inline-block';
+            } else {
+                scanStatus.textContent = 'Camera access is required for face scanning';
+            }
+        });
+
+        captureBtn.addEventListener('click', () => {
+            const imageData = captureImage(cameraVideo, cameraCanvas);
+            // For demo purposes, we'll just proceed after capture
+            // In a real app, you would verify against stored student images
+            scanStatus.textContent = 'Face verified successfully!';
             setTimeout(() => {
                 studentLogin.classList.remove('active');
                 studentDashboard.classList.add('active');
                 renderStudentHomework();
                 renderStudentMessages();
-            }, 2000);
+                stopCamera(cameraVideo);
+            }, 1500);
         });
 
-        homeworkScanBtn.addEventListener('click', () => {
-            // Simulate face scanning for homework access
-            homeworkScanBtn.disabled = true;
-            homeworkScanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-            
-            setTimeout(() => {
-                homeworkContent.style.display = 'block';
+        homeworkScanBtn.addEventListener('click', async () => {
+            const success = await startCamera(studentCameraVideo, studentScanOverlay);
+            if (success) {
+                studentScanStatus.textContent = 'Position your face in the frame';
                 homeworkScanBtn.style.display = 'none';
-                document.querySelector('#studentHomeworkTab .face-scan-container p').textContent = 'Face verified successfully!';
-                
-                // Mark homework as viewed by this student (ID 1 for demo)
-                if (!homeworks[0].viewedBy.includes(1)) {
-                    homeworks[0].viewedBy.push(1);
-                }
-            }, 2000);
+                studentCaptureBtn.style.display = 'inline-block';
+            } else {
+                studentScanStatus.textContent = 'Camera access is required for face scanning';
+            }
+        });
+
+        studentCaptureBtn.addEventListener('click', () => {
+            const imageData = captureImage(studentCameraVideo, studentCameraCanvas);
+            // For demo, we'll simulate face verification
+            // In reality, this would compare with the stored student image
+            const currentStudentId = 1; // Assuming Rahul Sharma is logged in
+            const verified = verifyFace(imageData, currentStudentId);
+            
+            if (verified) {
+                studentScanStatus.textContent = 'Face verified successfully!';
+                setTimeout(() => {
+                    homeworkContent.style.display = 'block';
+                    studentCaptureBtn.style.display = 'none';
+                    stopCamera(studentCameraVideo);
+                    
+                    // Mark homework as viewed by this student
+                    const currentStudentId = 1;
+                    homeworks.forEach(hw => {
+                        if (!hw.viewedBy.includes(currentStudentId)) {
+                            hw.viewedBy.push(currentStudentId);
+                        }
+                    });
+                    saveData();
+                }, 1500);
+            } else {
+                studentScanStatus.textContent = 'Face verification failed. Please try again.';
+                studentCaptureBtn.style.display = 'none';
+                homeworkScanBtn.style.display = 'inline-block';
+                stopCamera(studentCameraVideo);
+            }
         });
 
         teacherLogoutBtn.addEventListener('click', () => {
@@ -898,9 +1106,9 @@
             portalSelection.style.display = 'grid';
             homeworkContent.style.display = 'none';
             homeworkScanBtn.style.display = 'block';
-            homeworkScanBtn.disabled = false;
-            homeworkScanBtn.innerHTML = 'Scan Face to View Homework';
-            document.querySelector('#studentHomeworkTab .face-scan-container p').textContent = 'Face scan required to view homework';
+            studentCaptureBtn.style.display = 'none';
+            studentScanStatus.textContent = 'Face scan required to view homework';
+            stopCamera(studentCameraVideo);
         });
 
         // Tab switching
@@ -924,82 +1132,121 @@
 
         // Teacher functionality
         addStudentBtn.addEventListener('click', () => {
-            const name = prompt("Enter student name:");
-            if (name) {
-                const dob = prompt("Enter date of birth (DD-MM-YYYY):");
-                const admissionNo = prompt("Enter admission number:");
-                const rollNo = prompt("Enter roll number:");
-                const studentClass = prompt("Enter class:");
-                
-                if (dob && admissionNo && rollNo && studentClass) {
-                    const newStudent = {
-                        id: students.length + 1,
-                        name,
-                        dob,
-                        admissionNo,
-                        rollNo: parseInt(rollNo),
-                        class: studentClass
-                    };
-                    
-                    students.push(newStudent);
-                    renderStudents();
-                    alert('Student added successfully!');
-                }
+            const imageFile = document.getElementById('studentImage').files[0];
+            const name = document.getElementById('studentName').value;
+            const dob = document.getElementById('studentDob').value;
+            const admissionNo = document.getElementById('studentAdmissionNo').value;
+            const rollNo = document.getElementById('studentRollNo').value;
+            const selectedClass = studentClassSelection.querySelector('.selected');
+            
+            if (!imageFile) {
+                alert('Please upload a student image for face recognition.');
+                return;
             }
+            
+            if (!name || !dob || !admissionNo || !rollNo || !selectedClass) {
+                alert('Please fill all fields and select a class.');
+                return;
+            }
+            
+            // Convert image to base64 for storage
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newStudent = {
+                    id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
+                    name,
+                    dob,
+                    admissionNo,
+                    rollNo: parseInt(rollNo),
+                    class: selectedClass.dataset.class,
+                    image: e.target.result
+                };
+                
+                students.push(newStudent);
+                saveData();
+                renderStudents();
+                
+                // Clear form
+                document.getElementById('studentImage').value = '';
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentDob').value = '';
+                document.getElementById('studentAdmissionNo').value = '';
+                document.getElementById('studentRollNo').value = '';
+                studentClassSelection.querySelectorAll('.class-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                alert('Student added successfully!');
+            };
+            reader.readAsDataURL(imageFile);
         });
 
         assignHomeworkBtn.addEventListener('click', () => {
             const title = document.getElementById('homeworkTitle').value;
             const description = document.getElementById('homeworkDescription').value;
             const dueDate = document.getElementById('homeworkDueDate').value;
+            const selectedClass = homeworkClassSelection.querySelector('.selected');
             
-            if (title && description && dueDate) {
-                const newHomework = {
-                    id: homeworks.length + 1,
-                    title,
-                    description,
-                    dueDate,
-                    assignedDate: new Date().toISOString().split('T')[0],
-                    viewedBy: []
-                };
-                
-                homeworks.unshift(newHomework);
-                renderHomeworks();
-                
-                // Clear form
-                document.getElementById('homeworkTitle').value = '';
-                document.getElementById('homeworkDescription').value = '';
-                document.getElementById('homeworkDueDate').value = '';
-                
-                alert('Homework assigned successfully!');
-            } else {
-                alert('Please fill all fields!');
+            if (!title || !description || !dueDate || !selectedClass) {
+                alert('Please fill all fields and select a class.');
+                return;
             }
+            
+            const newHomework = {
+                id: homeworks.length > 0 ? Math.max(...homeworks.map(h => h.id)) + 1 : 1,
+                title,
+                description,
+                dueDate,
+                assignedDate: new Date().toISOString().split('T')[0],
+                class: selectedClass.dataset.class,
+                viewedBy: []
+            };
+            
+            homeworks.unshift(newHomework);
+            saveData();
+            renderHomeworks();
+            
+            // Clear form
+            document.getElementById('homeworkTitle').value = '';
+            document.getElementById('homeworkDescription').value = '';
+            document.getElementById('homeworkDueDate').value = '';
+            homeworkClassSelection.querySelectorAll('.class-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            alert('Homework assigned successfully!');
         });
 
         sendMessageBtn.addEventListener('click', () => {
             const title = document.getElementById('messageTitle').value;
             const content = document.getElementById('messageContent').value;
+            const selectedClass = messageClassSelection.querySelector('.selected');
             
-            if (title && content) {
-                const newMessage = {
-                    id: messages.length + 1,
-                    title,
-                    content,
-                    date: new Date().toISOString().split('T')[0]
-                };
-                
-                messages.unshift(newMessage);
-                renderMessages();
-                
-                // Clear form
-                document.getElementById('messageTitle').value = '';
-                document.getElementById('messageContent').value = '';
-                
-                alert('Message sent successfully!');
-            } else {
-                alert('Please fill all fields!');
+            if (!title || !content || !selectedClass) {
+                alert('Please fill all fields and select a class.');
+                return;
             }
+            
+            const newMessage = {
+                id: messages.length > 0 ? Math.max(...messages.map(m => m.id)) + 1 : 1,
+                title,
+                content,
+                date: new Date().toISOString().split('T')[0],
+                class: selectedClass.dataset.class
+            };
+            
+            messages.unshift(newMessage);
+            saveData();
+            renderMessages();
+            
+            // Clear form
+            document.getElementById('messageTitle').value = '';
+            document.getElementById('messageContent').value = '';
+            messageClassSelection.querySelectorAll('.class-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            alert('Message sent successfully!');
         });
 
         // Render functions
@@ -1010,7 +1257,7 @@
                 studentCard.className = 'student-card';
                 studentCard.innerHTML = `
                     <div class="student-img">
-                        <i class="fas fa-user"></i>
+                        ${student.image ? `<img src="${student.image}" alt="${student.name}">` : `<i class="fas fa-user"></i>`}
                     </div>
                     <h4>${student.name}</h4>
                     <p>Class: ${student.class}</p>
@@ -1030,6 +1277,7 @@
                     <p>${homework.description}</p>
                     <div class="homework-meta">
                         <span>Due: ${formatDate(homework.dueDate)}</span>
+                        <span>Class: ${homework.class}</span>
                         <span>Viewed by: ${homework.viewedBy.length} students</span>
                     </div>
                 `;
@@ -1047,6 +1295,7 @@
                     <p>${message.content}</p>
                     <div class="message-meta">
                         <span>${formatDate(message.date)}</span>
+                        <span>Class: ${message.class}</span>
                     </div>
                 `;
                 messageList.appendChild(messageItem);
@@ -1055,7 +1304,11 @@
 
         function renderStudentHomework() {
             studentHomeworkList.innerHTML = '';
-            homeworks.forEach(homework => {
+            // Show only homework for student's class (10A in this demo)
+            const studentClass = "10A";
+            const studentHomeworks = homeworks.filter(hw => hw.class === studentClass);
+            
+            studentHomeworks.forEach(homework => {
                 const homeworkItem = document.createElement('div');
                 homeworkItem.className = 'homework-item';
                 homeworkItem.innerHTML = `
@@ -1072,7 +1325,11 @@
 
         function renderStudentMessages() {
             studentMessageList.innerHTML = '';
-            messages.forEach(message => {
+            // Show only messages for student's class (10A in this demo)
+            const studentClass = "10A";
+            const studentMessages = messages.filter(msg => msg.class === studentClass);
+            
+            studentMessages.forEach(message => {
                 const messageItem = document.createElement('div');
                 messageItem.className = 'message-item';
                 messageItem.innerHTML = `
