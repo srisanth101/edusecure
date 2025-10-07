@@ -3,1663 +3,1100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduSecure - Face Recognition Portal</title>
+    <title>Educational Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
         }
-        
+
         :root {
-            --primary: #0A84FF;
-            --secondary: #64D2FF;
-            --dark: #1C1C1E;
-            --darker: #000000;
-            --light: #F2F2F7;
-            --success: #30D158;
-            --warning: #FFD60A;
-            --danger: #FF453A;
-            --card-bg: rgba(28, 28, 30, 0.8);
-            --text-primary: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --border: #38383A;
+            --primary: #007AFF;
+            --primary-light: #5AC8FA;
+            --primary-dark: #0056CC;
+            --secondary: #8E8E93;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --background: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text: #000000;
+            --text-muted: #8E8E93;
+            --border: #C6C6C8;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 14px;
+            --radius-full: 50%;
         }
-        
+
         body {
-            background: linear-gradient(135deg, var(--darker), var(--dark));
-            color: var(--text-primary);
+            background-color: var(--background);
+            color: var(--text);
             min-height: 100vh;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .container {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 30px 20px 20px;
             display: flex;
             flex-direction: column;
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-            background: var(--dark);
         }
-        
-        .screen.active {
-            transform: translateX(0);
-            opacity: 1;
-            z-index: 10;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        
-        .screen.next {
-            transform: translateX(100%);
-            opacity: 0;
-            z-index: 5;
-        }
-        
-        .screen.prev {
-            transform: translateX(-100%);
-            opacity: 0;
-            z-index: 5;
-        }
-        
+
         header {
-            padding: 20px 0;
             text-align: center;
-            position: relative;
+            padding: 30px 0;
         }
-        
-        .back-btn {
-            position: absolute;
-            left: 0;
-            top: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 10px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-primary);
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 20;
-        }
-        
-        .back-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
+
         .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 15px;
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-full);
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
-        
+
+        .logo img {
+            width: 70%;
+            height: 70%;
+            border-radius: var(--radius-full);
+            object-fit: cover;
+        }
+
         h1 {
             font-size: 34px;
             font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
         }
-        
+
         .subtitle {
             font-size: 17px;
-            opacity: 0.7;
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            margin-bottom: 40px;
         }
-        
-        .portal-choice {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin: 30px 0;
-            flex: 1;
-            justify-content: center;
+
+        .portal-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
         }
-        
+
         .portal-card {
             background: var(--card-bg);
-            border-radius: 14px;
-            padding: 20px;
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            animation: fadeInUp 0.6s ease;
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
-        
-        .portal-card:nth-child(2) {
-            animation-delay: 0.1s;
+
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
         }
-        
-        .portal-card:active {
-            transform: scale(0.98);
-            background: rgba(58, 58, 60, 0.8);
-        }
-        
-        .portal-card i {
-            font-size: 28px;
-            margin-bottom: 12px;
-            color: var(--primary);
-        }
-        
-        .portal-card h3 {
-            font-size: 22px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .portal-card p {
-            font-size: 16px;
-            opacity: 0.7;
-            color: var(--text-secondary);
-        }
-        
-        .login-form {
-            background: var(--card-bg);
-            border-radius: 14px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .login-form.active {
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            animation: slideInUp 0.5s ease;
-        }
-        
-        .form-group:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        
-        .form-group:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            font-size: 17px;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: rgba(44, 44, 46, 0.6);
-            color: var(--text-primary);
-            font-size: 17px;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        button {
-            padding: 16px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .portal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 100%;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
+            font-size: 36px;
             color: white;
         }
-        
-        button:active {
-            transform: scale(0.98);
+
+        .portal-card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
-        
-        .portal-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+
+        .portal-card p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.5;
         }
-        
-        .portal-header {
+
+        .login-form {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 17px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 17px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        .btn {
+            padding: 16px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #6D6D72;
+        }
+
+        .back-btn {
+            margin-top: 15px;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 20px 0;
-            animation: fadeInDown 0.5s ease;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
-        
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
             color: white;
-            font-size: 20px;
         }
-        
+
+        .user-details h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
         .tabs {
             display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
             background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            animation: fadeIn 0.5s ease;
+            padding: 8px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
-        
+
         .tab {
             flex: 1;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
             font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
         }
-        
+
         .tab.active {
             background: var(--primary);
             color: white;
         }
-        
+
         .tab-content {
             display: none;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 14px;
-            flex: 1;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            animation: fadeIn 0.5s ease;
         }
-        
+
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.4s ease;
         }
-        
-        .camera-section {
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
-        
-        .camera-container {
-            width: 100%;
-            height: 250px;
-            border-radius: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(44, 44, 46, 0.6);
-            overflow: hidden;
-            position: relative;
-            border: 1px solid var(--border);
-            animation: zoomIn 0.5s ease;
-        }
-        
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-        
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-        
-        .camera-placeholder {
-            text-align: center;
-            color: var(--text-secondary);
-        }
-        
-        .camera-placeholder i {
-            font-size: 50px;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-        
-        .camera-controls {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-            animation: fadeInUp 0.5s ease;
-        }
-        
-        .btn-secondary {
-            background: rgba(44, 44, 46, 0.6);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-        
-        .student-details {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
-        .detail-card {
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 14px;
-            padding: 20px;
-            border-left: 4px solid var(--primary);
-            animation: slideInRight 0.5s ease;
-        }
-        
-        .detail-card:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        
-        .detail-card:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        
-        .detail-card h3 {
-            margin-bottom: 12px;
-            color: var(--primary);
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .detail-card p {
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .attendance-status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .present {
-            background: rgba(48, 209, 88, 0.2);
-            color: var(--success);
-        }
-        
-        .absent {
-            background: rgba(255, 69, 58, 0.2);
-            color: var(--danger);
-        }
-        
-        .students-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
+
         .student-card {
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 14px;
+            background: var(--background);
+            border-radius: var(--radius);
             padding: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            animation: slideInUp 0.5s ease;
+            text-align: center;
+            transition: transform 0.2s ease;
         }
-        
-        .student-card:nth-child(2) {
-            animation-delay: 0.1s;
+
+        .student-card:hover {
+            transform: translateY(-3px);
         }
-        
-        .student-card:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        
-        .student-card:active {
-            transform: scale(0.98);
-            background: rgba(58, 58, 60, 0.8);
-        }
-        
-        .student-card h3 {
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .student-card p {
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .student-photo {
+
+        .student-img {
             width: 80px;
             height: 80px;
-            border-radius: 10px;
-            object-fit: cover;
-            margin-bottom: 10px;
-            border: 2px solid var(--primary);
-        }
-        
-        .add-student-form {
+            border-radius: var(--radius-full);
+            margin: 0 auto 15px;
+            background: var(--secondary);
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
-        .photo-upload {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .photo-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 2px dashed var(--border);
-            display: none;
-        }
-        
-        .logout-btn {
-            background: rgba(255, 69, 58, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 69, 58, 0.3);
-            width: auto;
-            padding: 12px 16px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 20px;
-            border-radius: 10px;
-            background: var(--success);
+            justify-content: center;
+            font-size: 30px;
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 1000;
-            font-size: 16px;
-            font-weight: 500;
-            animation: slideInDown 0.5s ease;
+            overflow: hidden;
         }
-        
-        .error {
-            background: var(--danger);
+
+        .student-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        
-        .warning {
-            background: var(--warning);
-            color: black;
-        }
-        
-        .message-board {
-            margin-top: 20px;
-        }
-        
-        .message {
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 14px;
+
+        .homework-item, .message-item {
             padding: 20px;
-            margin-bottom: 16px;
+            background: var(--background);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
             border-left: 4px solid var(--primary);
-            animation: slideInRight 0.5s ease;
         }
-        
-        .message h4 {
+
+        .homework-item h4, .message-item h4 {
+            margin-bottom: 10px;
             color: var(--primary);
-            margin-bottom: 8px;
             font-size: 18px;
-            font-weight: 600;
         }
-        
-        .message p {
-            color: var(--text-secondary);
+
+        .homework-meta, .message-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-top: 12px;
         }
-        
-        .send-message-form {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 14px;
-        }
-        
-        .homework-item {
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--secondary);
-            animation: slideInLeft 0.5s ease;
-        }
-        
-        .homework-item h4 {
-            color: var(--secondary);
-            margin-bottom: 8px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .homework-item p {
-            color: var(--text-secondary);
-        }
-        
-        .recognition-status {
+
+        .face-scan-container {
             text-align: center;
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px 0;
-            font-weight: 500;
+            padding: 40px 20px;
         }
-        
-        .recognition-success {
-            background: rgba(48, 209, 88, 0.2);
-            color: var(--success);
+
+        .face-scanner {
+            width: 200px;
+            height: 200px;
+            border-radius: var(--radius-full);
+            margin: 0 auto 30px;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: var(--primary);
+            border: 3px solid var(--primary);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .recognition-error {
-            background: rgba(255, 69, 58, 0.2);
-            color: var(--danger);
+
+        .face-scanner::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-full);
+            box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3);
+            animation: pulse 2s infinite;
         }
-        
-        /* Hide scrollbars but keep functionality */
-        .tab-content::-webkit-scrollbar {
-            display: none;
+
+        @keyframes pulse {
+            0% { box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3); }
+            50% { box-shadow: inset 0 0 30px rgba(0, 122, 255, 0.6); }
+            100% { box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3); }
         }
-        
-        .tab-content {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+
+        .scanning-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
         }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 15px;
+            border-top: 1px solid var(--border);
         }
-        
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        /* iOS-style toggles and inputs */
+        .ios-toggle {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
         }
-        
-        @keyframes fadeInDown {
-            from { 
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        .ios-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
-        
-        @keyframes slideInUp {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        .ios-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: .4s;
+            border-radius: 34px;
         }
-        
-        @keyframes slideInDown {
-            from { 
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        .ios-slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
-        
-        @keyframes slideInLeft {
-            from { 
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
+
+        input:checked + .ios-slider {
+            background-color: var(--primary);
         }
-        
-        @keyframes slideInRight {
-            from { 
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
+
+        input:checked + .ios-slider:before {
+            transform: translateX(20px);
         }
-        
-        @keyframes zoomIn {
-            from { 
-                opacity: 0;
-                transform: scale(0.9);
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .portal-selection {
+                grid-template-columns: 1fr;
             }
-            to { 
-                opacity: 1;
-                transform: scale(1);
+            
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            
+            .tab {
+                white-space: nowrap;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Welcome Screen -->
-        <div class="screen active" id="welcome-screen">
-    <header>
-        <div class="logo-container">
+        <header>
             <div class="logo">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhDj-7hATBvyP8yglPY1xhL-cU4GP0nFkfTrk3soDPAZHI2JuwCsPLvTn2yjBrK8dxPwDSeH2dXrtLi3Ag8BjpXCT7dCkmRHmCB0iMphHTjq-4t6l2DIs6WCNVYMzZQW8UDm5GlcsZ2-oUeo0WzjX5ydURow14zx9g0gMOf0A-pZN48mEZyGbLgasIva98/s2048/Picsart_25-09-19_18-59-20-679.png" alt="Logo" style="width:60px; height:60px; object-fit:contain;">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgTLzzO8FQehQ0OZ0bQXYC3MzngI-QjMLhP-GBiQh_Kvb4GamrWYicmIHKtDtmvu_f5leLFiYTkDRVN4krpYPi3C_Ek6Gt7MqYD98FoB1D1mw-H00Zsui2P7C06J4PFfxAgmANu4Le2DgXQGm9lfAlQvEAHD6H9g6TYw6QEEcpG4eDVFD-0nF4c2EkFwjQ" alt="Educational Portal Logo">
             </div>
-        </div>
-    </header>
-</div>
+            <h1>Educational Portal</h1>
+            <p class="subtitle">Connect, Learn, and Grow Together</p>
+        </header>
 
-                <p class="subtitle">Secure Student Management with Face Recognition</p>
-            </header>
-            
-            <div class="portal-choice">
-                <div class="portal-card" id="student-portal-btn">
-                    <i class="fas fa-user-graduate"></i>
-                    <h3>Student Portal</h3>
-                    <p>Face recognition login</p>
-                </div>
-                <div class="portal-card" id="teacher-portal-btn">
+        <!-- Portal Selection -->
+        <div class="portal-selection" id="portalSelection">
+            <div class="portal-card" id="teacherPortalBtn">
+                <div class="portal-icon">
                     <i class="fas fa-chalkboard-teacher"></i>
-                    <h3>Teacher Portal</h3>
-                    <p>Manage students and classes</p>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Student Login Screen -->
-        <div class="screen next" id="student-login-screen">
-            <button class="back-btn" id="back-from-student-login">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            
-            <header>
-                <h2>Student Login</h2>
-                <p class="subtitle">Scan your face to access the portal</p>
-            </header>
-            
-            <div class="login-form active">
-                <div class="camera-section">
-                    <div class="camera-container">
-                        <video id="video" autoplay playsinline></video>
-                        <canvas id="canvas"></canvas>
-                        <div class="camera-placeholder" id="camera-placeholder">
-                            <i class="fas fa-camera"></i>
-                            <p>Camera feed will appear here</p>
-                        </div>
-                    </div>
-                    
-                    <div class="recognition-status" id="recognition-status" style="display: none;"></div>
-                    
-                    <div class="camera-controls">
-                        <button id="start-camera" class="btn-primary">
-                            <i class="fas fa-camera"></i> Start Camera
-                        </button>
-                        <button id="capture" class="btn-secondary" style="display: none;">
-                            <i class="fas fa-search"></i> Scan Face
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Teacher Login Screen -->
-        <div class="screen next" id="teacher-login-screen">
-            <button class="back-btn" id="back-from-teacher-login">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            
-            <header>
-                <h2>Teacher Login</h2>
-                <p class="subtitle">Enter your credentials</p>
-            </header>
-            
-            <div class="login-form active">
-                <div class="form-group">
-                    <label for="teacher-school">School</label>
-                    <select id="teacher-school" required>
-                        <option value="">Select School</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teacher-name">Teacher Name</label>
-                    <select id="teacher-name" required>
-                        <option value="">Select Teacher</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teacher-password">Password</label>
-                    <input type="password" id="teacher-password" placeholder="Enter your password" required>
-                </div>
-                <button id="teacher-login-btn" class="btn-primary">Login <i class="fas fa-sign-in-alt"></i></button>
-            </div>
-        </div>
-        
-        <!-- Student Portal -->
-        <div class="screen next" id="student-portal">
-            <div class="portal-header">
-                <h2>Student Portal</h2>
-                <div class="user-info">
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <div id="student-display-name">Student</div>
-                        <div id="student-display-class">Class</div>
-                    </div>
-                </div>
-                <button class="logout-btn" id="student-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
-            
-            <div class="tabs">
-                <div class="tab active" data-tab="details">My Details</div>
-                <div class="tab" data-tab="homework">Homework</div>
-                <div class="tab" data-tab="messages">Messages</div>
-            </div>
-            
-            <div class="tab-content active" id="details-tab">
-                <h3>My Information</h3>
-                <div class="student-details">
-                    <div class="detail-card">
-                        <h3>Personal Information</h3>
-                        <p><strong>Name:</strong> <span id="result-name">-</span></p>
-                        <p><strong>Date of Birth:</strong> <span id="result-dob">-</span></p>
-                        <p><strong>Student ID:</strong> <span id="result-id">-</span></p>
-                    </div>
-                    
-                    <div class="detail-card">
-                        <h3>Academic Information</h3>
-                        <p><strong>School:</strong> <span id="result-school">-</span></p>
-                        <p><strong>Class:</strong> <span id="result-class">-</span></p>
-                        <p><strong>Teacher:</strong> <span id="result-teacher">-</span></p>
-                    </div>
-                    
-                    <div class="detail-card">
-                        <h3>Attendance Status</h3>
-                        <p><strong>Today:</strong> <span id="result-today" class="attendance-status">-</span></p>
-                        <p><strong>This Month:</strong> <span id="result-month">-</span></p>
-                        <p><strong>Overall:</strong> <span id="result-overall">-</span></p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="homework-tab">
-                <h3>Homework Assignments</h3>
-                <div id="homework-list">
-                    <!-- Homework items will be added here -->
-                </div>
-            </div>
-            
-            <div class="tab-content" id="messages-tab">
-                <h3>Important Messages</h3>
-                <div id="messages-list">
-                    <!-- Messages will be added here -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Teacher Portal -->
-        <div class="screen next" id="teacher-portal">
-            <button class="back-btn" id="back-from-teacher-portal">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            
-            <div class="portal-header">
                 <h2>Teacher Portal</h2>
+                <p>Manage students, assign homework, and send important messages</p>
+            </div>
+            <div class="portal-card" id="studentPortalBtn">
+                <div class="portal-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2>Student Portal</h2>
+                <p>Access your homework, messages, and learning resources</p>
+            </div>
+        </div>
+
+        <!-- Teacher Login -->
+        <div class="login-form" id="teacherLogin">
+            <h2 style="margin-bottom: 20px; text-align: center;">Teacher Login</h2>
+            <div class="form-group">
+                <label for="schoolSelect">Select School</label>
+                <select id="schoolSelect" class="form-control">
+                    <option value="">-- Select School --</option>
+                    <option value="kv1">KV School 1</option>
+                    <option value="kv2">KV School 2</option>
+                    <option value="kv3">KV School 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="teacherSelect">Select Teacher</label>
+                <select id="teacherSelect" class="form-control">
+                    <option value="">-- Select Teacher --</option>
+                    <option value="t1">Mr. Sharma</option>
+                    <option value="t2">Ms. Patel</option>
+                    <option value="t3">Mr. Kumar</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="teacherPassword">Password</label>
+                <input type="password" id="teacherPassword" class="form-control" placeholder="Enter password">
+            </div>
+            <button class="btn btn-block" id="teacherLoginBtn">Login</button>
+            <button class="btn btn-secondary btn-block back-btn" id="backFromTeacherLogin">Back</button>
+        </div>
+
+        <!-- Student Face Scan -->
+        <div class="login-form" id="studentLogin">
+            <h2 style="margin-bottom: 20px; text-align: center;">Student Login</h2>
+            <div class="face-scan-container">
+                <div class="face-scanner">
+                    <i class="fas fa-user"></i>
+                </div>
+                <p class="scanning-text">Position your face in the frame for scanning</p>
+                <button class="btn" id="startScanBtn">Start Face Scan</button>
+            </div>
+            <button class="btn btn-secondary btn-block back-btn" id="backFromStudentLogin">Back</button>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div class="dashboard" id="teacherDashboard">
+            <div class="dashboard-header">
                 <div class="user-info">
-                    <div class="avatar">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <div>
-                        <div id="teacher-display-name">Teacher</div>
-                        <div id="teacher-display-school">School</div>
+                    <div class="user-avatar">MS</div>
+                    <div class="user-details">
+                        <h3>Mr. Sharma</h3>
+                        <p>KV School 1 | Mathematics Teacher</p>
                     </div>
                 </div>
-                <button class="logout-btn" id="teacher-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="btn" id="teacherLogoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
-            
+
             <div class="tabs">
-                <div class="tab active" data-tab="add-student">Add Student</div>
-                <div class="tab" data-tab="view-students">View Students</div>
-                <div class="tab" data-tab="send-message">Send Message</div>
+                <button class="tab active" data-tab="students">Students</button>
+                <button class="tab" data-tab="homework">Homework</button>
+                <button class="tab" data-tab="messages">Messages</button>
             </div>
-            
-            <div class="tab-content active" id="add-student-tab">
-                <h3>Register New Student</h3>
-                <p>Add a new student with face recognition</p>
-                
-                <form id="add-student-form">
-                    <div class="add-student-form">
-                        <div class="photo-upload">
-                            <img id="photo-preview" class="photo-preview" alt="Student Photo Preview">
-                            <input type="file" id="student-photo" accept="image/*" required style="display: none;">
-                            <button type="button" id="upload-photo-btn" class="btn-secondary">
-                                <i class="fas fa-upload"></i> Upload Student Photo
-                            </button>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="new-student-name">Full Name</label>
-                            <input type="text" id="new-student-name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="new-student-dob">Date of Birth</label>
-                            <input type="date" id="new-student-dob" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="new-student-class">Class</label>
-                            <select id="new-student-class" required>
-                                <option value="">Select Class</option>
-                                <option value="10-A">10-A</option>
-                                <option value="10-B">10-B</option>
-                                <option value="9-A">9-A</option>
-                                <option value="9-B">9-B</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <button type="submit" id="register-student-btn" class="btn-primary">
-                                <i class="fas fa-save"></i> Register Student
-                            </button>
-                        </div>
+
+            <div class="tab-content active" id="studentsTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Student Profiles</h3>
+                        <button class="btn" id="addStudentBtn">
+                            <i class="fas fa-plus"></i> Add Student
+                        </button>
                     </div>
-                </form>
-            </div>
-            
-            <div class="tab-content" id="view-students-tab">
-                <h3>Registered Students</h3>
-                <div class="students-list" id="students-list">
-                    <!-- Student cards will be added here dynamically -->
+                    <div class="student-grid" id="studentList">
+                        <!-- Student cards will be dynamically added here -->
+                    </div>
                 </div>
             </div>
-            
-            <div class="tab-content" id="send-message-tab">
-                <h3>Send Message to Students</h3>
-                <div class="send-message-form">
-                    <div class="form-group">
-                        <label for="message-title">Message Title</label>
-                        <input type="text" id="message-title" required>
+
+            <div class="tab-content" id="homeworkTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assign Homework</h3>
                     </div>
                     <div class="form-group">
-                        <label for="message-content">Message Content</label>
-                        <textarea id="message-content" rows="4" required style="width: 100%; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: rgba(44, 44, 46, 0.6); color: var(--text-primary);"></textarea>
+                        <label for="homeworkTitle">Homework Title</label>
+                        <input type="text" id="homeworkTitle" class="form-control" placeholder="Enter homework title">
                     </div>
-                    <button id="send-message-btn" class="btn-primary">
-                        <i class="fas fa-paper-plane"></i> Send Message to All Students
-                    </button>
+                    <div class="form-group">
+                        <label for="homeworkDescription">Description</label>
+                        <textarea id="homeworkDescription" class="form-control" rows="4" placeholder="Enter homework details"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="homeworkDueDate">Due Date</label>
+                        <input type="date" id="homeworkDueDate" class="form-control">
+                    </div>
+                    <button class="btn btn-block" id="assignHomeworkBtn">Assign Homework</button>
                 </div>
-                
-                <div class="message-board">
-                    <h4>Sent Messages</h4>
-                    <div id="sent-messages">
-                        <!-- Sent messages will appear here -->
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Homework</h3>
+                    </div>
+                    <div id="homeworkList">
+                        <!-- Homework items will be dynamically added here -->
                     </div>
                 </div>
             </div>
+
+            <div class="tab-content" id="messagesTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Send Message</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageTitle">Message Title</label>
+                        <input type="text" id="messageTitle" class="form-control" placeholder="Enter message title">
+                    </div>
+                    <div class="form-group">
+                        <label for="messageContent">Message Content</label>
+                        <textarea id="messageContent" class="form-control" rows="4" placeholder="Enter your message"></textarea>
+                    </div>
+                    <button class="btn btn-block" id="sendMessageBtn">Send Message</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Messages</h3>
+                    </div>
+                    <div id="messageList">
+                        <!-- Message items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div class="dashboard" id="studentDashboard">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar">RS</div>
+                    <div class="user-details">
+                        <h3>Rahul Sharma</h3>
+                        <p>Class 10A | Roll No: 15</p>
+                    </div>
+                </div>
+                <button class="btn" id="studentLogoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="profile">My Profile</button>
+                <button class="tab" data-tab="studentHomework">Homework</button>
+                <button class="tab" data-tab="studentMessages">Messages</button>
+            </div>
+
+            <div class="tab-content active" id="profileTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Student Details</h3>
+                    </div>
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                        <div class="student-img">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h3>Rahul Sharma</h3>
+                            <p>Class 10A</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p><strong>Date of Birth:</strong> 15-05-2007</p>
+                            <p><strong>Admission No:</strong> KV202015</p>
+                        </div>
+                        <div>
+                            <p><strong>Roll No:</strong> 15</p>
+                            <p><strong>School:</strong> KV School 1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="studentHomeworkTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Homework Access</h3>
+                    </div>
+                    <div class="face-scan-container">
+                        <div class="face-scanner">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <p class="scanning-text">Face scan required to view homework</p>
+                        <button class="btn" id="homeworkScanBtn">Scan Face to View Homework</button>
+                    </div>
+                </div>
+
+                <div class="card" id="homeworkContent" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="card-title">Your Homework</h3>
+                    </div>
+                    <div id="studentHomeworkList">
+                        <!-- Student homework items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="studentMessagesTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Important Messages</h3>
+                    </div>
+                    <div id="studentMessageList">
+                        <!-- Student message items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Educational Portal &copy; 2023. All rights reserved.</p>
         </div>
     </div>
-    
-    <div class="notification" id="notification"></div>
 
     <script>
         // DOM Elements
-        const screens = document.querySelectorAll('.screen');
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const studentLoginScreen = document.getElementById('student-login-screen');
-        const teacherLoginScreen = document.getElementById('teacher-login-screen');
-        const studentPortalScreen = document.getElementById('student-portal');
-        const teacherPortalScreen = document.getElementById('teacher-portal');
-        
-        const studentPortalBtn = document.getElementById('student-portal-btn');
-        const teacherPortalBtn = document.getElementById('teacher-portal-btn');
-        
-        const teacherSchoolSelect = document.getElementById('teacher-school');
-        const teacherNameSelect = document.getElementById('teacher-name');
-        
-        const teacherPasswordInput = document.getElementById('teacher-password');
-        
-        const studentDisplayName = document.getElementById('student-display-name');
-        const studentDisplayClass = document.getElementById('student-display-class');
-        
-        const teacherDisplayName = document.getElementById('teacher-display-name');
-        const teacherDisplaySchool = document.getElementById('teacher-display-school');
-        
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const cameraPlaceholder = document.getElementById('camera-placeholder');
-        const recognitionStatus = document.getElementById('recognition-status');
-        
-        const startCameraBtn = document.getElementById('start-camera');
-        const captureBtn = document.getElementById('capture');
-        
-        const resultName = document.getElementById('result-name');
-        const resultDob = document.getElementById('result-dob');
-        const resultSchool = document.getElementById('result-school');
-        const resultClass = document.getElementById('result-class');
-        const resultId = document.getElementById('result-id');
-        const resultTeacher = document.getElementById('result-teacher');
-        const resultToday = document.getElementById('result-today');
-        const resultMonth = document.getElementById('result-month');
-        const resultOverall = document.getElementById('result-overall');
-        
-        const addStudentForm = document.getElementById('add-student-form');
-        const studentPhotoInput = document.getElementById('student-photo');
-        const uploadPhotoBtn = document.getElementById('upload-photo-btn');
-        const photoPreview = document.getElementById('photo-preview');
-        const registerStudentBtn = document.getElementById('register-student-btn');
-        
-        const studentsList = document.getElementById('students-list');
-        const homeworkList = document.getElementById('homework-list');
-        const messagesList = document.getElementById('messages-list');
-        const sentMessages = document.getElementById('sent-messages');
-        
-        const messageTitle = document.getElementById('message-title');
-        const messageContent = document.getElementById('message-content');
-        const sendMessageBtn = document.getElementById('send-message-btn');
-        
-        const notification = document.getElementById('notification');
+        const portalSelection = document.getElementById('portalSelection');
+        const teacherPortalBtn = document.getElementById('teacherPortalBtn');
+        const studentPortalBtn = document.getElementById('studentPortalBtn');
+        const teacherLogin = document.getElementById('teacherLogin');
+        const studentLogin = document.getElementById('studentLogin');
+        const teacherDashboard = document.getElementById('teacherDashboard');
+        const studentDashboard = document.getElementById('studentDashboard');
         
         // Back buttons
-        const backFromStudentLogin = document.getElementById('back-from-student-login');
-        const backFromTeacherLogin = document.getElementById('back-from-teacher-login');
-        const backFromTeacherPortal = document.getElementById('back-from-teacher-portal');
+        const backFromTeacherLogin = document.getElementById('backFromTeacherLogin');
+        const backFromStudentLogin = document.getElementById('backFromStudentLogin');
         
-        // Face recognition variables
-        let faceDetectionInterval;
-        let isFaceDetectionRunning = false;
-        let labeledFaceDescriptors = [];
-        let faceMatcher;
+        // Login buttons
+        const teacherLoginBtn = document.getElementById('teacherLoginBtn');
+        const startScanBtn = document.getElementById('startScanBtn');
+        const homeworkScanBtn = document.getElementById('homeworkScanBtn');
         
-        // Data storage
-        let schools = [
-            { 
-                id: 1, 
-                name: "Kendriya Vidyalaya Malkapuram", 
-                teachers: [
-                    { id: "TEA-001", name: "Narashinga Rao", password: "kvmlk" },
-                    { id: "TEA-002", name: "Vara Kumar", password: "kvmlk" },
-                    { id: "TEA-003", name: "Ramalakshi", password: "kvmlk" }
-                ] 
-            }
+        // Logout buttons
+        const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
+        const studentLogoutBtn = document.getElementById('studentLogoutBtn');
+        
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Teacher functionality
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const studentList = document.getElementById('studentList');
+        const assignHomeworkBtn = document.getElementById('assignHomeworkBtn');
+        const homeworkList = document.getElementById('homeworkList');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const messageList = document.getElementById('messageList');
+        
+        // Student functionality
+        const studentHomeworkList = document.getElementById('studentHomeworkList');
+        const studentMessageList = document.getElementById('studentMessageList');
+        const homeworkContent = document.getElementById('homeworkContent');
+
+        // Sample data
+        let students = [
+            { id: 1, name: "Rahul Sharma", dob: "15-05-2007", admissionNo: "KV202015", rollNo: 15, class: "10A" },
+            { id: 2, name: "Priya Patel", dob: "22-08-2007", admissionNo: "KV202022", rollNo: 22, class: "10A" },
+            { id: 3, name: "Amit Kumar", dob: "10-03-2007", admissionNo: "KV202010", rollNo: 10, class: "10A" }
         ];
-        
-        let studentsDatabase = JSON.parse(localStorage.getItem('studentsDatabase')) || [];
-        let messagesDatabase = JSON.parse(localStorage.getItem('messagesDatabase')) || [];
-        let homeworkDatabase = JSON.parse(localStorage.getItem('homeworkDatabase')) || [];
-        
-        // Current screen index
-        let currentScreenIndex = 0;
-        
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load face-api models
-            loadFaceApiModels();
+
+        let homeworks = [
+            { id: 1, title: "Math Assignment", description: "Complete exercises 5.1 to 5.5 from textbook", dueDate: "2023-10-15", assignedDate: "2023-10-10", viewedBy: [1] },
+            { id: 2, title: "Science Project", description: "Prepare a model of solar system with proper labels", dueDate: "2023-10-20", assignedDate: "2023-10-12", viewedBy: [1, 2] }
+        ];
+
+        let messages = [
+            { id: 1, title: "Parent-Teacher Meeting", content: "There will be a parent-teacher meeting on 25th October 2023.", date: "2023-10-05" },
+            { id: 2, title: "School Holiday", content: "School will remain closed on 2nd November 2023 for Diwali celebration.", date: "2023-10-08" }
+        ];
+
+        // Event Listeners
+        teacherPortalBtn.addEventListener('click', () => {
+            portalSelection.style.display = 'none';
+            teacherLogin.classList.add('active');
+        });
+
+        studentPortalBtn.addEventListener('click', () => {
+            portalSelection.style.display = 'none';
+            studentLogin.classList.add('active');
+        });
+
+        backFromTeacherLogin.addEventListener('click', () => {
+            teacherLogin.classList.remove('active');
+            portalSelection.style.display = 'grid';
+        });
+
+        backFromStudentLogin.addEventListener('click', () => {
+            studentLogin.classList.remove('active');
+            portalSelection.style.display = 'grid';
+        });
+
+        teacherLoginBtn.addEventListener('click', () => {
+            const password = document.getElementById('teacherPassword').value;
+            if (password === 'kvmlk') {
+                teacherLogin.classList.remove('active');
+                teacherDashboard.classList.add('active');
+                renderStudents();
+                renderHomeworks();
+                renderMessages();
+            } else {
+                alert('Incorrect password. Please try again.');
+            }
+        });
+
+        startScanBtn.addEventListener('click', () => {
+            // Simulate face scanning process
+            startScanBtn.disabled = true;
+            startScanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
             
-            // Populate school and teacher dropdowns
-            populateSchoolDropdown();
+            setTimeout(() => {
+                studentLogin.classList.remove('active');
+                studentDashboard.classList.add('active');
+                renderStudentHomework();
+                renderStudentMessages();
+            }, 2000);
+        });
+
+        homeworkScanBtn.addEventListener('click', () => {
+            // Simulate face scanning for homework access
+            homeworkScanBtn.disabled = true;
+            homeworkScanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
             
-            // Portal selection
-            studentPortalBtn.addEventListener('click', () => {
-                navigateToScreen(1);
-            });
-            
-            teacherPortalBtn.addEventListener('click', () => {
-                navigateToScreen(2);
-            });
-            
-            // Back button functionality
-            backFromStudentLogin.addEventListener('click', () => {
-                navigateToScreen(0);
-                stopFaceDetection();
-                resetCamera();
-            });
-            
-            backFromTeacherLogin.addEventListener('click', () => {
-                navigateToScreen(0);
-            });
-            
-            backFromTeacherPortal.addEventListener('click', () => {
-                navigateToScreen(2);
-            });
-            
-            // Teacher login
-            document.getElementById('teacher-login-btn').addEventListener('click', () => {
-                const school = teacherSchoolSelect.value;
-                const teacherName = teacherNameSelect.value;
-                const password = teacherPasswordInput.value;
+            setTimeout(() => {
+                homeworkContent.style.display = 'block';
+                homeworkScanBtn.style.display = 'none';
+                document.querySelector('#studentHomeworkTab .face-scan-container p').textContent = 'Face verified successfully!';
                 
-                if (!school || !teacherName || !password) {
-                    showNotification('Please fill in all fields', 'warning');
-                    return;
+                // Mark homework as viewed by this student (ID 1 for demo)
+                if (!homeworks[0].viewedBy.includes(1)) {
+                    homeworks[0].viewedBy.push(1);
                 }
+            }, 2000);
+        });
+
+        teacherLogoutBtn.addEventListener('click', () => {
+            teacherDashboard.classList.remove('active');
+            portalSelection.style.display = 'grid';
+            document.getElementById('teacherPassword').value = '';
+        });
+
+        studentLogoutBtn.addEventListener('click', () => {
+            studentDashboard.classList.remove('active');
+            portalSelection.style.display = 'grid';
+            homeworkContent.style.display = 'none';
+            homeworkScanBtn.style.display = 'block';
+            homeworkScanBtn.disabled = false;
+            homeworkScanBtn.innerHTML = 'Scan Face to View Homework';
+            document.querySelector('#studentHomeworkTab .face-scan-container p').textContent = 'Face scan required to view homework';
+        });
+
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
                 
-                // Find the selected teacher
-                const schoolData = schools.find(s => s.name === school);
-                if (!schoolData) {
-                    showNotification('School not found', 'error');
-                    return;
-                }
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
                 
-                const teacher = schoolData.teachers.find(t => t.name === teacherName);
-                if (!teacher) {
-                    showNotification('Teacher not found', 'error');
-                    return;
-                }
-                
-                // Check password
-                if (password !== teacher.password) {
-                    showNotification('Invalid password', 'error');
-                    return;
-                }
-                
-                teacherDisplayName.textContent = teacher.name;
-                teacherDisplaySchool.textContent = school;
-                
-                navigateToScreen(4);
-                showNotification(`Welcome, ${teacher.name}`, 'success');
-                loadStudentsList(school);
-            });
-            
-            // Student face scan
-            startCameraBtn.addEventListener('click', async () => {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { 
-                            width: { ideal: 640 },
-                            height: { ideal: 480 }
-                        } 
-                    });
-                    
-                    video.srcObject = stream;
-                    video.style.display = 'block';
-                    cameraPlaceholder.style.display = 'none';
-                    startCameraBtn.style.display = 'none';
-                    captureBtn.style.display = 'block';
-                    
-                    // Start face detection
-                    startFaceDetection();
-                } catch (err) {
-                    console.error("Error accessing camera: ", err);
-                    showNotification('Unable to access camera. Please check permissions.', 'error');
-                }
-            });
-            
-            // Photo upload for student registration
-            uploadPhotoBtn.addEventListener('click', () => {
-                studentPhotoInput.click();
-            });
-            
-            studentPhotoInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        photoPreview.src = e.target.result;
-                        photoPreview.style.display = 'block';
+                // Show active tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}Tab`) {
+                        content.classList.add('active');
                     }
-                    
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-            
-            // Logout functionality
-            document.getElementById('student-logout').addEventListener('click', () => {
-                navigateToScreen(0);
-                stopFaceDetection();
-                resetCamera();
-                showNotification('Logged out successfully', 'success');
-            });
-            
-            document.getElementById('teacher-logout').addEventListener('click', () => {
-                navigateToScreen(0);
-                showNotification('Logged out successfully', 'success');
-            });
-            
-            // Tab functionality
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    // Update active tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Show active tab content
-                    const tabContents = document.querySelectorAll('.tab-content');
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                        if (content.id === `${tabId}-tab`) {
-                            content.classList.add('active');
-                        }
-                    });
                 });
-            });
-            
-            // Add student form submission
-            addStudentForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const school = teacherDisplaySchool.textContent;
-                const name = document.getElementById('new-student-name').value;
-                const dob = document.getElementById('new-student-dob').value;
-                const studentClass = document.getElementById('new-student-class').value;
-                const photo = studentPhotoInput.files[0];
-                
-                if (!name || !dob || !studentClass || !photo) {
-                    showNotification('Please fill in all fields and upload a photo', 'warning');
-                    return;
-                }
-                
-                // Generate a unique student ID
-                const studentId = 'STU-' + new Date().getFullYear() + '-' + 
-                    String(studentsDatabase.length + 1).padStart(3, '0');
-                
-                // Add student to database
-                const newStudent = {
-                    id: studentId,
-                    name: name,
-                    dob: dob,
-                    school: school,
-                    class: studentClass,
-                    photo: URL.createObjectURL(photo),
-                    faceDescriptor: null // Will be set after face recognition training
-                };
-                
-                studentsDatabase.push(newStudent);
-                localStorage.setItem('studentsDatabase', JSON.stringify(studentsDatabase));
-                
-                // Train face recognition with new student
-                trainFaceRecognition();
-                
-                // Reset form
-                addStudentForm.reset();
-                photoPreview.style.display = 'none';
-                
-                // Update students list
-                loadStudentsList(school);
-                
-                showNotification(`Student ${name} registered successfully`, 'success');
-            });
-            
-            // Send message functionality
-            sendMessageBtn.addEventListener('click', function() {
-                const school = teacherDisplaySchool.textContent;
-                const title = messageTitle.value;
-                const content = messageContent.value;
-                
-                if (!title || !content) {
-                    showNotification('Please fill in both title and content', 'warning');
-                    return;
-                }
-                
-                const newMessage = {
-                    id: messagesDatabase.length + 1,
-                    school: school,
-                    title: title,
-                    content: content,
-                    date: new Date().toLocaleDateString()
-                };
-                
-                messagesDatabase.push(newMessage);
-                localStorage.setItem('messagesDatabase', JSON.stringify(messagesDatabase));
-                
-                // Clear form
-                messageTitle.value = '';
-                messageContent.value = '';
-                
-                // Update sent messages list
-                loadSentMessages(school);
-                
-                showNotification('Message sent to all students', 'success');
-            });
-            
-            // Update teacher dropdown when school changes
-            teacherSchoolSelect.addEventListener('change', function() {
-                populateTeacherDropdown(this.value);
             });
         });
-        
-        // Face recognition functions
-        async function loadFaceApiModels() {
-            try {
-                await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-                await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-                await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-                console.log('Face API models loaded successfully');
+
+        // Teacher functionality
+        addStudentBtn.addEventListener('click', () => {
+            const name = prompt("Enter student name:");
+            if (name) {
+                const dob = prompt("Enter date of birth (DD-MM-YYYY):");
+                const admissionNo = prompt("Enter admission number:");
+                const rollNo = prompt("Enter roll number:");
+                const studentClass = prompt("Enter class:");
                 
-                // Train face recognition with existing students
-                trainFaceRecognition();
-            } catch (error) {
-                console.error('Error loading face API models:', error);
-                // Fallback to simulated face recognition
-                showNotification('Using simulated face recognition', 'warning');
-            }
-        }
-        
-        async function trainFaceRecognition() {
-            if (studentsDatabase.length === 0) return;
-            
-            labeledFaceDescriptors = [];
-            
-            for (const student of studentsDatabase) {
-                if (student.photo) {
-                    try {
-                        const img = await faceapi.fetchImage(student.photo);
-                        const detections = await faceapi
-                            .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
-                            .withFaceLandmarks()
-                            .withFaceDescriptor();
-                        
-                        if (detections) {
-                            labeledFaceDescriptors.push(
-                                new faceapi.LabeledFaceDescriptors(
-                                    student.id, 
-                                    [detections.descriptor]
-                                )
-                            );
-                        }
-                    } catch (error) {
-                        console.error(`Error processing face for ${student.name}:`, error);
-                    }
-                }
-            }
-            
-            if (labeledFaceDescriptors.length > 0) {
-                faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
-                console.log('Face recognition trained with', labeledFaceDescriptors.length, 'students');
-            }
-        }
-        
-        function startFaceDetection() {
-            if (isFaceDetectionRunning) return;
-            
-            isFaceDetectionRunning = true;
-            recognitionStatus.style.display = 'block';
-            recognitionStatus.textContent = 'Looking for faces...';
-            recognitionStatus.className = 'recognition-status recognition-error';
-            
-            faceDetectionInterval = setInterval(async () => {
-                if (!video.srcObject || !faceMatcher) return;
-                
-                try {
-                    const detections = await faceapi
-                        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-                        .withFaceLandmarks()
-                        .withFaceDescriptor();
+                if (dob && admissionNo && rollNo && studentClass) {
+                    const newStudent = {
+                        id: students.length + 1,
+                        name,
+                        dob,
+                        admissionNo,
+                        rollNo: parseInt(rollNo),
+                        class: studentClass
+                    };
                     
-                    if (detections) {
-                        const bestMatch = faceMatcher.findBestMatch(detections.descriptor);
-                        
-                        if (bestMatch._label !== 'unknown') {
-                            // Face recognized
-                            const student = studentsDatabase.find(s => s.id === bestMatch._label);
-                            
-                            if (student) {
-                                recognitionStatus.textContent = `Face recognized: ${student.name}`;
-                                recognitionStatus.className = 'recognition-status recognition-success';
-                                
-                                // Auto-login after 1 second
-                                setTimeout(() => {
-                                    loginStudent(student);
-                                }, 1000);
-                                
-                                stopFaceDetection();
-                            }
-                        } else {
-                            recognitionStatus.textContent = 'Face not recognized. Please try again.';
-                            recognitionStatus.className = 'recognition-status recognition-error';
-                        }
-                    } else {
-                        recognitionStatus.textContent = 'No face detected. Please position yourself in front of the camera.';
-                        recognitionStatus.className = 'recognition-status recognition-error';
-                    }
-                } catch (error) {
-                    console.error('Face detection error:', error);
-                    // Fallback to simulated recognition for demo
-                    simulateFaceRecognition();
-                    stopFaceDetection();
+                    students.push(newStudent);
+                    renderStudents();
+                    alert('Student added successfully!');
                 }
-            }, 1000);
-        }
-        
-        function stopFaceDetection() {
-            isFaceDetectionRunning = false;
-            clearInterval(faceDetectionInterval);
-        }
-        
-        function simulateFaceRecognition() {
-            if (studentsDatabase.length === 0) {
-                showNotification('No students registered in the system', 'warning');
-                return;
             }
+        });
+
+        assignHomeworkBtn.addEventListener('click', () => {
+            const title = document.getElementById('homeworkTitle').value;
+            const description = document.getElementById('homeworkDescription').value;
+            const dueDate = document.getElementById('homeworkDueDate').value;
             
-            // For demo, just pick the first student
-            const student = studentsDatabase[0];
-            loginStudent(student);
-        }
-        
-        function loginStudent(student) {
-            // Display student details
-            resultName.textContent = student.name;
-            resultDob.textContent = student.dob;
-            resultSchool.textContent = student.school;
-            resultClass.textContent = student.class;
-            resultId.textContent = student.id;
-            resultTeacher.textContent = teacherDisplayName.textContent;
-            
-            // Set attendance status
-            const isPresent = Math.random() > 0.3;
-            resultToday.textContent = isPresent ? 'Present' : 'Absent';
-            resultToday.className = `attendance-status ${isPresent ? 'present' : 'absent'}`;
-            
-            resultMonth.textContent = `${Math.floor(Math.random() * 20) + 10}/20 days`;
-            resultOverall.textContent = `${Math.floor(Math.random() * 30) + 70}%`;
-            
-            studentDisplayName.textContent = student.name;
-            studentDisplayClass.textContent = `${student.school} - ${student.class}`;
-            
-            // Load homework and messages for the student
-            loadHomework(student.school, student.class);
-            loadMessages(student.school, student.class);
-            
-            // Switch to student portal
-            navigateToScreen(3);
-            
-            showNotification(`Welcome back, ${student.name}`, 'success');
-            
-            // Stop camera after recognition
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
-            }
-        }
-        
-        // Navigation functions
-        function navigateToScreen(index) {
-            if (index < 0 || index >= screens.length) return;
-            
-            screens.forEach((screen, i) => {
-                screen.classList.remove('active', 'prev', 'next');
+            if (title && description && dueDate) {
+                const newHomework = {
+                    id: homeworks.length + 1,
+                    title,
+                    description,
+                    dueDate,
+                    assignedDate: new Date().toISOString().split('T')[0],
+                    viewedBy: []
+                };
                 
-                if (i === index) {
-                    screen.classList.add('active');
-                } else if (i < index) {
-                    screen.classList.add('prev');
-                } else {
-                    screen.classList.add('next');
-                }
-            });
-            
-            currentScreenIndex = index;
-        }
-        
-        // Helper functions
-        function populateSchoolDropdown() {
-            teacherSchoolSelect.innerHTML = '<option value="">Select School</option>';
-            schools.forEach(school => {
-                const option = document.createElement('option');
-                option.value = school.name;
-                option.textContent = school.name;
-                teacherSchoolSelect.appendChild(option);
-            });
-            
-            // Also populate teacher dropdown for the first school
-            if (schools.length > 0) {
-                populateTeacherDropdown(schools[0].name);
+                homeworks.unshift(newHomework);
+                renderHomeworks();
+                
+                // Clear form
+                document.getElementById('homeworkTitle').value = '';
+                document.getElementById('homeworkDescription').value = '';
+                document.getElementById('homeworkDueDate').value = '';
+                
+                alert('Homework assigned successfully!');
+            } else {
+                alert('Please fill all fields!');
             }
-        }
-        
-        function populateTeacherDropdown(schoolName) {
-            teacherNameSelect.innerHTML = '<option value="">Select Teacher</option>';
+        });
+
+        sendMessageBtn.addEventListener('click', () => {
+            const title = document.getElementById('messageTitle').value;
+            const content = document.getElementById('messageContent').value;
             
-            const school = schools.find(s => s.name === schoolName);
-            if (school) {
-                school.teachers.forEach(teacher => {
-                    const option = document.createElement('option');
-                    option.value = teacher.name;
-                    option.textContent = teacher.name;
-                    teacherNameSelect.appendChild(option);
-                });
+            if (title && content) {
+                const newMessage = {
+                    id: messages.length + 1,
+                    title,
+                    content,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                
+                messages.unshift(newMessage);
+                renderMessages();
+                
+                // Clear form
+                document.getElementById('messageTitle').value = '';
+                document.getElementById('messageContent').value = '';
+                
+                alert('Message sent successfully!');
+            } else {
+                alert('Please fill all fields!');
             }
-        }
-        
-        function loadStudentsList(school) {
-            studentsList.innerHTML = '';
-            
-            const schoolStudents = studentsDatabase.filter(student => student.school === school);
-            
-            if (schoolStudents.length === 0) {
-                studentsList.innerHTML = '<p>No students registered for this school yet.</p>';
-                return;
-            }
-            
-            schoolStudents.forEach(student => {
+        });
+
+        // Render functions
+        function renderStudents() {
+            studentList.innerHTML = '';
+            students.forEach(student => {
                 const studentCard = document.createElement('div');
                 studentCard.className = 'student-card';
                 studentCard.innerHTML = `
-                    <img src="${student.photo}" alt="${student.name}" class="student-photo">
-                    <h3>${student.name}</h3>
-                    <p><span>Student ID:</span> ${student.id}</p>
-                    <p><span>Date of Birth:</span> ${student.dob}</p>
-                    <p><span>Class:</span> ${student.class}</p>
+                    <div class="student-img">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h4>${student.name}</h4>
+                    <p>Class: ${student.class}</p>
+                    <p>Roll No: ${student.rollNo}</p>
                 `;
-                studentsList.appendChild(studentCard);
+                studentList.appendChild(studentCard);
             });
         }
-        
-        function loadHomework(school, studentClass) {
+
+        function renderHomeworks() {
             homeworkList.innerHTML = '';
-            
-            const classHomework = homeworkDatabase.filter(hw => 
-                hw.school === school && hw.class === studentClass
-            );
-            
-            if (classHomework.length === 0) {
-                homeworkList.innerHTML = '<p>No homework assignments yet.</p>';
-                return;
-            }
-            
-            classHomework.forEach(hw => {
+            homeworks.forEach(homework => {
                 const homeworkItem = document.createElement('div');
                 homeworkItem.className = 'homework-item';
                 homeworkItem.innerHTML = `
-                    <h4>${hw.subject} - Due: ${hw.dueDate}</h4>
-                    <p>${hw.description}</p>
+                    <h4>${homework.title}</h4>
+                    <p>${homework.description}</p>
+                    <div class="homework-meta">
+                        <span>Due: ${formatDate(homework.dueDate)}</span>
+                        <span>Viewed by: ${homework.viewedBy.length} students</span>
+                    </div>
                 `;
                 homeworkList.appendChild(homeworkItem);
             });
         }
-        
-        function loadMessages(school, studentClass) {
-            messagesList.innerHTML = '';
-            
-            const schoolMessages = messagesDatabase.filter(msg => msg.school === school);
-            
-            if (schoolMessages.length === 0) {
-                messagesList.innerHTML = '<p>No messages yet.</p>';
-                return;
-            }
-            
-            schoolMessages.forEach(msg => {
-                const message = document.createElement('div');
-                message.className = 'message';
-                message.innerHTML = `
-                    <h4>${msg.title} <small>(${msg.date})</small></h4>
-                    <p>${msg.content}</p>
+
+        function renderMessages() {
+            messageList.innerHTML = '';
+            messages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <h4>${message.title}</h4>
+                    <p>${message.content}</p>
+                    <div class="message-meta">
+                        <span>${formatDate(message.date)}</span>
+                    </div>
                 `;
-                messagesList.appendChild(message);
+                messageList.appendChild(messageItem);
             });
         }
-        
-        function loadSentMessages(school) {
-            sentMessages.innerHTML = '';
-            
-            const schoolMessages = messagesDatabase.filter(msg => msg.school === school);
-            
-            if (schoolMessages.length === 0) {
-                sentMessages.innerHTML = '<p>No messages sent yet.</p>';
-                return;
-            }
-            
-            schoolMessages.forEach(msg => {
-                const message = document.createElement('div');
-                message.className = 'message';
-                message.innerHTML = `
-                    <h4>${msg.title} <small>(${msg.date})</small></h4>
-                    <p>${msg.content}</p>
+
+        function renderStudentHomework() {
+            studentHomeworkList.innerHTML = '';
+            homeworks.forEach(homework => {
+                const homeworkItem = document.createElement('div');
+                homeworkItem.className = 'homework-item';
+                homeworkItem.innerHTML = `
+                    <h4>${homework.title}</h4>
+                    <p>${homework.description}</p>
+                    <div class="homework-meta">
+                        <span>Due: ${formatDate(homework.dueDate)}</span>
+                        <span>Assigned: ${formatDate(homework.assignedDate)}</span>
+                    </div>
                 `;
-                sentMessages.appendChild(message);
+                studentHomeworkList.appendChild(homeworkItem);
             });
         }
-        
-        function resetCamera() {
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-            }
-            
-            video.style.display = 'none';
-            cameraPlaceholder.style.display = 'block';
-            startCameraBtn.style.display = 'block';
-            captureBtn.style.display = 'none';
-            recognitionStatus.style.display = 'none';
-        }
-        
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = 'notification';
-            
-            if (type === 'error') {
-                notification.classList.add('error');
-            } else if (type === 'warning') {
-                notification.classList.add('warning');
-            }
-            
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-        
-        // Add some sample data for demonstration
-        if (studentsDatabase.length === 0) {
-            // Create a sample student with a placeholder photo
-            const samplePhotoUrl = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80';
-            
-            studentsDatabase.push({
-                id: 'STU-2023-001',
-                name: 'Alex Johnson',
-                dob: '2007-05-15',
-                school: 'Kendriya Vidyalaya Malkapuram',
-                class: '10-A',
-                photo: samplePhotoUrl
+
+        function renderStudentMessages() {
+            studentMessageList.innerHTML = '';
+            messages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <h4>${message.title}</h4>
+                    <p>${message.content}</p>
+                    <div class="message-meta">
+                        <span>${formatDate(message.date)}</span>
+                    </div>
+                `;
+                studentMessageList.appendChild(messageItem);
             });
-            localStorage.setItem('studentsDatabase', JSON.stringify(studentsDatabase));
         }
-        
-        if (homeworkDatabase.length === 0) {
-            homeworkDatabase.push({
-                id: 1,
-                school: 'Kendriya Vidyalaya Malkapuram',
-                class: '10-A',
-                subject: 'Mathematics',
-                dueDate: '2023-10-20',
-                description: 'Complete exercises 1-10 on page 45 of the textbook.'
-            });
-            localStorage.setItem('homeworkDatabase', JSON.stringify(homeworkDatabase));
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
         }
+
+        // Initialize
+        renderStudents();
+        renderHomeworks();
+        renderMessages();
+        renderStudentHomework();
+        renderStudentMessages();
     </script>
 </body>
 </html>
