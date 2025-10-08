@@ -22,22 +22,40 @@
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --background: #ffffff;
+            --card-bg: #f8fafc;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --radius-full: 50%;
+        }
+
+        [data-theme="dark"] {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --accent: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
             --background: #0f172a;
             --card-bg: #1e293b;
             --text: #f1f5f9;
             --text-muted: #94a3b8;
             --border: #334155;
             --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            --radius: 12px;
-            --radius-full: 50%;
         }
 
         body {
-            background: linear-gradient(135deg, var(--background), #1e293b);
+            background: var(--background);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
         }
 
         .container {
@@ -49,6 +67,27 @@
         header {
             text-align: center;
             padding: 30px 0;
+            position: relative;
+        }
+
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            font-weight: 500;
+            box-shadow: var(--shadow);
         }
 
         .logo {
@@ -108,7 +147,7 @@
 
         .portal-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
             border-color: var(--primary-light);
         }
 
@@ -172,7 +211,7 @@
         .form-control {
             width: 100%;
             padding: 16px;
-            background: rgba(30, 41, 59, 0.7);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 10px;
             color: var(--text);
@@ -205,7 +244,7 @@
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .btn:active {
@@ -230,6 +269,14 @@
 
         .btn-success:hover {
             background: #0da271;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #e5940b;
         }
 
         .back-btn {
@@ -274,6 +321,13 @@
             font-size: 24px;
             font-weight: bold;
             color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .user-details h3 {
@@ -354,12 +408,13 @@
         }
 
         .student-card {
-            background: rgba(30, 41, 59, 0.7);
+            background: var(--card-bg);
             border-radius: var(--radius);
             padding: 20px;
             text-align: center;
             transition: transform 0.2s ease;
             border: 1px solid var(--border);
+            box-shadow: var(--shadow);
         }
 
         .student-card:hover {
@@ -388,9 +443,40 @@
             object-fit: cover;
         }
 
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .contact-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .contact-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .contact-icon.whatsapp {
+            background: #25D366;
+        }
+
+        .contact-icon.phone {
+            background: var(--primary);
+        }
+
         .homework-item, .message-item {
             padding: 20px;
-            background: rgba(30, 41, 59, 0.7);
+            background: var(--card-bg);
             border-radius: var(--radius);
             margin-bottom: 15px;
             border-left: 4px solid var(--primary-light);
@@ -427,14 +513,14 @@
             box-shadow: var(--shadow);
         }
 
-        #cameraVideo {
+        #cameraVideo, #studentCameraVideo {
             width: 100%;
             height: 100%;
             object-fit: cover;
             background: #000;
         }
 
-        #cameraCanvas {
+        #cameraCanvas, #studentCameraCanvas {
             display: none;
         }
 
@@ -468,7 +554,7 @@
 
         .class-option {
             padding: 12px;
-            background: rgba(30, 41, 59, 0.7);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             text-align: center;
@@ -483,6 +569,81 @@
         .class-option.selected {
             background: var(--primary);
             border-color: var(--primary-light);
+            color: white;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .subject-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .stream-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stream-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .stream-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .stream-card.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        .stream-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .stream-card ul {
+            text-align: left;
+            margin-top: 10px;
+            padding-left: 20px;
         }
 
         .footer {
@@ -523,12 +684,21 @@
                 width: 250px;
                 height: 250px;
             }
+            
+            .subject-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="theme-switch">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+            </div>
             <div class="logo">
                 <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiJY7J3N211LgvtEmXBQYBTrhyV4Msf-rXEkPr6Ns-BxAbOp-2rLh-V4MhUOj9pL0lhHjPbIbdYm7IxB3_wXggfa6hLq8iYu0e3NC9NThaTn61zBVjbFUgF3VPlYmS9BxqmolSzAQW1DYmUea5EiquLqysBntxklO7OQ6uBeZvCLLEkjaKnGaW7FMPakj0" alt="Educational Portal Logo">
             </div>
@@ -608,10 +778,12 @@
         <div class="dashboard" id="teacherDashboard">
             <div class="dashboard-header">
                 <div class="user-info">
-                    <div class="user-avatar">MS</div>
+                    <div class="user-avatar">
+                        <img src="" alt="Teacher Avatar" id="teacherAvatar">
+                    </div>
                     <div class="user-details">
-                        <h3>Mr. Sharma</h3>
-                        <p>KV School 1 | Mathematics Teacher</p>
+                        <h3 id="teacherName">Mr. Sharma</h3>
+                        <p id="teacherDetails">KV School 1 | Mathematics Teacher</p>
                     </div>
                 </div>
                 <button class="btn" id="teacherLogoutBtn">
@@ -649,6 +821,10 @@
                     <div class="form-group">
                         <label for="studentRollNo">Roll Number</label>
                         <input type="number" id="studentRollNo" class="form-control" placeholder="Enter roll number">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentPhone">Phone Number</label>
+                        <input type="tel" id="studentPhone" class="form-control" placeholder="Enter phone number">
                     </div>
                     <div class="form-group">
                         <label>Select Class</label>
@@ -744,10 +920,12 @@
         <div class="dashboard" id="studentDashboard">
             <div class="dashboard-header">
                 <div class="user-info">
-                    <div class="user-avatar">RS</div>
+                    <div class="user-avatar">
+                        <img src="" alt="Student Avatar" id="studentAvatar">
+                    </div>
                     <div class="user-details">
-                        <h3>Rahul Sharma</h3>
-                        <p>Class 10A | Roll No: 15</p>
+                        <h3 id="studentName">Rahul Sharma</h3>
+                        <p id="studentDetails">Class 10A | Roll No: 15</p>
                     </div>
                 </div>
                 <button class="btn" id="studentLogoutBtn">
@@ -757,6 +935,7 @@
 
             <div class="tabs">
                 <button class="tab active" data-tab="profile">My Profile</button>
+                <button class="tab" data-tab="home">Home</button>
                 <button class="tab" data-tab="studentHomework">Homework</button>
                 <button class="tab" data-tab="studentMessages">Messages</button>
             </div>
@@ -768,22 +947,33 @@
                     </div>
                     <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
                         <div class="student-img">
-                            <i class="fas fa-user"></i>
+                            <img src="" alt="Student Image" id="profileStudentImg">
                         </div>
                         <div>
-                            <h3>Rahul Sharma</h3>
-                            <p>Class 10A</p>
+                            <h3 id="profileStudentName">Rahul Sharma</h3>
+                            <p id="profileStudentClass">Class 10A</p>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
-                            <p><strong>Date of Birth:</strong> 15-05-2007</p>
-                            <p><strong>Admission No:</strong> KV202015</p>
+                            <p><strong>Date of Birth:</strong> <span id="profileDob">15-05-2007</span></p>
+                            <p><strong>Admission No:</strong> <span id="profileAdmissionNo">KV202015</span></p>
                         </div>
                         <div>
-                            <p><strong>Roll No:</strong> 15</p>
-                            <p><strong>School:</strong> KV School 1</p>
+                            <p><strong>Roll No:</strong> <span id="profileRollNo">15</span></p>
+                            <p><strong>School:</strong> <span id="profileSchool">KV School 1</span></p>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="homeTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Subjects</h3>
+                    </div>
+                    <div id="subjectContent">
+                        <!-- Subject content will be dynamically added here -->
                     </div>
                 </div>
             </div>
@@ -846,6 +1036,7 @@
         const studentLogin = document.getElementById('studentLogin');
         const teacherDashboard = document.getElementById('teacherDashboard');
         const studentDashboard = document.getElementById('studentDashboard');
+        const themeToggle = document.getElementById('themeToggle');
         
         // Back buttons
         const backFromTeacherLogin = document.getElementById('backFromTeacherLogin');
@@ -889,11 +1080,48 @@
         const studentHomeworkList = document.getElementById('studentHomeworkList');
         const studentMessageList = document.getElementById('studentMessageList');
         const homeworkContent = document.getElementById('homeworkContent');
+        const subjectContent = document.getElementById('subjectContent');
+        
+        // Profile elements
+        const teacherAvatar = document.getElementById('teacherAvatar');
+        const teacherName = document.getElementById('teacherName');
+        const teacherDetails = document.getElementById('teacherDetails');
+        const studentAvatar = document.getElementById('studentAvatar');
+        const studentName = document.getElementById('studentName');
+        const studentDetails = document.getElementById('studentDetails');
+        const profileStudentImg = document.getElementById('profileStudentImg');
+        const profileStudentName = document.getElementById('profileStudentName');
+        const profileStudentClass = document.getElementById('profileStudentClass');
+        const profileDob = document.getElementById('profileDob');
+        const profileAdmissionNo = document.getElementById('profileAdmissionNo');
+        const profileRollNo = document.getElementById('profileRollNo');
+        const profileSchool = document.getElementById('profileSchool');
         
         // Class selection elements
         const studentClassSelection = document.getElementById('studentClassSelection');
         const homeworkClassSelection = document.getElementById('homeworkClassSelection');
         const messageClassSelection = document.getElementById('messageClassSelection');
+
+        // Theme functionality
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        }
 
         // Generate class options (1st to 12th, sections A, B, C)
         function generateClassOptions(container) {
@@ -919,9 +1147,9 @@
 
         // Sample data - using localStorage for persistence
         let students = JSON.parse(localStorage.getItem('students')) || [
-            { id: 1, name: "Rahul Sharma", dob: "2007-05-15", admissionNo: "KV202015", rollNo: 15, class: "10A", image: null },
-            { id: 2, name: "Priya Patel", dob: "2007-08-22", admissionNo: "KV202022", rollNo: 22, class: "10A", image: null },
-            { id: 3, name: "Amit Kumar", dob: "2007-03-10", admissionNo: "KV202010", rollNo: 10, class: "10A", image: null }
+            { id: 1, name: "Rahul Sharma", dob: "2007-05-15", admissionNo: "KV202015", rollNo: 15, class: "10A", phone: "9876543210", image: null },
+            { id: 2, name: "Priya Patel", dob: "2007-08-22", admissionNo: "KV202022", rollNo: 22, class: "10A", phone: "9876543211", image: null },
+            { id: 3, name: "Amit Kumar", dob: "2007-03-10", admissionNo: "KV202010", rollNo: 10, class: "10A", phone: "9876543212", image: null }
         ];
 
         let homeworks = JSON.parse(localStorage.getItem('homeworks')) || [
@@ -945,15 +1173,22 @@
         let stream = null;
         let studentStream = null;
 
-        async function startCamera(videoElement, overlayElement) {
+        async function startCamera(videoElement, overlayElement, useFrontCamera = true) {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
+                const constraints = {
                     video: { 
-                        facingMode: 'user',
                         width: { ideal: 300 },
                         height: { ideal: 300 }
                     } 
-                });
+                };
+                
+                if (useFrontCamera) {
+                    constraints.video.facingMode = 'user';
+                } else {
+                    constraints.video.facingMode = { exact: 'environment' };
+                }
+                
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoElement.srcObject = stream;
                 overlayElement.style.display = 'none';
                 return true;
@@ -1023,13 +1258,19 @@
                 generateClassOptions(studentClassSelection);
                 generateClassOptions(homeworkClassSelection);
                 generateClassOptions(messageClassSelection);
+                
+                // Set teacher info
+                const teacherSelect = document.getElementById('teacherSelect');
+                const selectedTeacher = teacherSelect.options[teacherSelect.selectedIndex].text;
+                teacherName.textContent = selectedTeacher;
+                teacherDetails.textContent = `${document.getElementById('schoolSelect').options[document.getElementById('schoolSelect').selectedIndex].text} | Mathematics Teacher`;
             } else {
                 alert('Incorrect password. Please try again.');
             }
         });
 
         startScanBtn.addEventListener('click', async () => {
-            const success = await startCamera(cameraVideo, scanOverlay);
+            const success = await startCamera(cameraVideo, scanOverlay, true); // Front camera for students
             if (success) {
                 scanStatus.textContent = 'Position your face in the frame';
                 startScanBtn.style.display = 'none';
@@ -1049,12 +1290,14 @@
                 studentDashboard.classList.add('active');
                 renderStudentHomework();
                 renderStudentMessages();
+                renderSubjects();
+                updateStudentProfile();
                 stopCamera(cameraVideo);
             }, 1500);
         });
 
         homeworkScanBtn.addEventListener('click', async () => {
-            const success = await startCamera(studentCameraVideo, studentScanOverlay);
+            const success = await startCamera(studentCameraVideo, studentScanOverlay, true); // Front camera for students
             if (success) {
                 studentScanStatus.textContent = 'Position your face in the frame';
                 homeworkScanBtn.style.display = 'none';
@@ -1137,6 +1380,7 @@
             const dob = document.getElementById('studentDob').value;
             const admissionNo = document.getElementById('studentAdmissionNo').value;
             const rollNo = document.getElementById('studentRollNo').value;
+            const phone = document.getElementById('studentPhone').value;
             const selectedClass = studentClassSelection.querySelector('.selected');
             
             if (!imageFile) {
@@ -1144,7 +1388,7 @@
                 return;
             }
             
-            if (!name || !dob || !admissionNo || !rollNo || !selectedClass) {
+            if (!name || !dob || !admissionNo || !rollNo || !phone || !selectedClass) {
                 alert('Please fill all fields and select a class.');
                 return;
             }
@@ -1158,6 +1402,7 @@
                     dob,
                     admissionNo,
                     rollNo: parseInt(rollNo),
+                    phone,
                     class: selectedClass.dataset.class,
                     image: e.target.result
                 };
@@ -1172,6 +1417,7 @@
                 document.getElementById('studentDob').value = '';
                 document.getElementById('studentAdmissionNo').value = '';
                 document.getElementById('studentRollNo').value = '';
+                document.getElementById('studentPhone').value = '';
                 studentClassSelection.querySelectorAll('.class-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
@@ -1262,6 +1508,14 @@
                     <h4>${student.name}</h4>
                     <p>Class: ${student.class}</p>
                     <p>Roll No: ${student.rollNo}</p>
+                    <div class="contact-icons">
+                        <div class="contact-icon whatsapp" onclick="openWhatsApp('${student.phone}')">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="contact-icon phone" onclick="callStudent('${student.phone}')">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                    </div>
                 `;
                 studentList.appendChild(studentCard);
             });
@@ -1343,9 +1597,153 @@
             });
         }
 
+        function renderSubjects() {
+            subjectContent.innerHTML = '';
+            
+            // For classes 6-8
+            const classes6to8 = document.createElement('div');
+            classes6to8.innerHTML = '<h3 style="margin-bottom: 15px;">Classes 6-8</h3>';
+            const subjectGrid1 = document.createElement('div');
+            subjectGrid1.className = 'subject-grid';
+            
+            const subjects6to8 = [
+                { name: 'Mathematics', icon: 'fa-calculator' },
+                { name: 'Science', icon: 'fa-flask' },
+                { name: 'English', icon: 'fa-language' },
+                { name: 'Social Studies', icon: 'fa-globe-asia' },
+                { name: 'Sanskrit', icon: 'fa-book' },
+                { name: 'AI', icon: 'fa-robot' },
+                { name: 'Computer', icon: 'fa-laptop-code' }
+            ];
+            
+            subjects6to8.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                subjectCard.innerHTML = `
+                    <div class="subject-icon">
+                        <i class="fas ${subject.icon}"></i>
+                    </div>
+                    <h4>${subject.name}</h4>
+                `;
+                subjectGrid1.appendChild(subjectCard);
+            });
+            
+            classes6to8.appendChild(subjectGrid1);
+            subjectContent.appendChild(classes6to8);
+            
+            // For class 9
+            const class9 = document.createElement('div');
+            class9.innerHTML = '<h3 style="margin: 30px 0 15px;">Class 9</h3>';
+            const subjectGrid2 = document.createElement('div');
+            subjectGrid2.className = 'subject-grid';
+            
+            const subjects9 = [
+                { name: 'Social Studies', icon: 'fa-globe-asia' },
+                { name: 'Chemistry', icon: 'fa-vial' },
+                { name: 'Physics', icon: 'fa-atom' },
+                { name: 'Mathematics', icon: 'fa-calculator' },
+                { name: 'English', icon: 'fa-language' },
+                { name: 'Hindi', icon: 'fa-language' },
+                { name: 'Sanskrit', icon: 'fa-book' },
+                { name: 'Computer', icon: 'fa-laptop-code' },
+                { name: 'AI', icon: 'fa-robot' }
+            ];
+            
+            subjects9.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                subjectCard.innerHTML = `
+                    <div class="subject-icon">
+                        <i class="fas ${subject.icon}"></i>
+                    </div>
+                    <h4>${subject.name}</h4>
+                `;
+                subjectGrid2.appendChild(subjectCard);
+            });
+            
+            class9.appendChild(subjectGrid2);
+            subjectContent.appendChild(class9);
+            
+            // For class 11
+            const class11 = document.createElement('div');
+            class11.innerHTML = '<h3 style="margin: 30px 0 15px;">Class 11</h3>';
+            const streamSelection = document.createElement('div');
+            streamSelection.className = 'stream-selection';
+            
+            const streams = [
+                {
+                    name: 'MPC (Mathematics, Physics, Chemistry)',
+                    subjects: ['Mathematics', 'Physics', 'Chemistry', 'English', 'AI', 'Computer Science']
+                },
+                {
+                    name: 'BIPC (Biology, Physics, Chemistry)',
+                    subjects: ['Biology', 'Physics', 'Chemistry', 'Hindi', 'AI', 'English']
+                },
+                {
+                    name: 'Commerce',
+                    subjects: ['Accountancy', 'Business Studies', 'Economics', 'Mathematics', 'English', 'Computer Science']
+                },
+                {
+                    name: 'Humanities',
+                    subjects: ['History', 'Political Science', 'Geography', 'Economics', 'Psychology', 'English']
+                }
+            ];
+            
+            streams.forEach(stream => {
+                const streamCard = document.createElement('div');
+                streamCard.className = 'stream-card';
+                streamCard.innerHTML = `
+                    <h3>${stream.name}</h3>
+                    <ul>
+                        ${stream.subjects.map(subject => `<li>${subject}</li>`).join('')}
+                    </ul>
+                `;
+                streamCard.addEventListener('click', () => {
+                    streamSelection.querySelectorAll('.stream-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    streamCard.classList.add('selected');
+                });
+                streamSelection.appendChild(streamCard);
+            });
+            
+            class11.appendChild(streamSelection);
+            subjectContent.appendChild(class11);
+        }
+
+        function updateStudentProfile() {
+            // For demo, using the first student
+            const student = students[0];
+            if (student) {
+                studentName.textContent = student.name;
+                studentDetails.textContent = `Class ${student.class} | Roll No: ${student.rollNo}`;
+                
+                profileStudentName.textContent = student.name;
+                profileStudentClass.textContent = `Class ${student.class}`;
+                profileDob.textContent = formatDate(student.dob);
+                profileAdmissionNo.textContent = student.admissionNo;
+                profileRollNo.textContent = student.rollNo;
+                profileSchool.textContent = "KV School 1";
+                
+                if (student.image) {
+                    studentAvatar.src = student.image;
+                    profileStudentImg.src = student.image;
+                }
+            }
+        }
+
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'short', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Contact functions
+        function openWhatsApp(phone) {
+            window.open(`https://wa.me/${phone}`, '_blank');
+        }
+
+        function callStudent(phone) {
+            window.open(`tel:${phone}`, '_self');
         }
 
         // Initialize
@@ -1354,6 +1752,7 @@
         renderMessages();
         renderStudentHomework();
         renderStudentMessages();
+        renderSubjects();
     </script>
 </body>
 </html>
