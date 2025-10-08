@@ -691,6 +691,33 @@
             transform: translateY(-2px);
         }
 
+        .multi-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .multi-option {
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .multi-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .multi-option.selected {
+            background: var(--primary);
+            border-color: var(--primary-light);
+            color: white;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .portal-selection {
@@ -764,16 +791,28 @@
         <div class="login-form" id="teacherLogin">
             <h2 style="margin-bottom: 20px; text-align: center;">Teacher Login</h2>
             <div class="form-group">
+                <label for="teacherSection">Select Section</label>
+                <select id="teacherSection" class="form-control">
+                    <option value="">-- Select Section --</option>
+                    <option value="primary">Primary</option>
+                    <option value="secondary">Secondary</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="teacherSelect">Select Teacher</label>
                 <select id="teacherSelect" class="form-control">
                     <option value="">-- Select Teacher --</option>
-                    <option value="narasinga">Narasinga Rao</option>
-                    <option value="vara">Vara Kumar</option>
+                    <!-- Teachers will be populated dynamically -->
                 </select>
             </div>
             <div class="form-group">
                 <label for="teacherPassword">Password</label>
                 <input type="password" id="teacherPassword" class="form-control" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="rememberMe"> Remember me
+                </label>
             </div>
             <button class="btn btn-block" id="teacherLoginBtn">Login</button>
             <button class="btn btn-secondary btn-block back-btn" id="backFromTeacherLogin">Back</button>
@@ -788,6 +827,11 @@
                     <option value="">-- Select Student --</option>
                     <!-- Students will be populated dynamically -->
                 </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="studentRememberMe"> Remember me
+                </label>
             </div>
             <div class="face-scan-container">
                 <div class="camera-container">
@@ -898,8 +942,8 @@
                         <input type="date" id="homeworkDueDate" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Select Class</label>
-                        <div class="class-selection" id="homeworkClassSelection">
+                        <label>Select Classes (Multiple Selection)</label>
+                        <div class="multi-select" id="homeworkClassSelection">
                             <!-- Class options will be generated here -->
                         </div>
                     </div>
@@ -930,8 +974,8 @@
                         <textarea id="messageContent" class="form-control" rows="4" placeholder="Enter your message"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Select Class</label>
-                        <div class="class-selection" id="messageClassSelection">
+                        <label>Select Classes (Multiple Selection)</label>
+                        <div class="multi-select" id="messageClassSelection">
                             <!-- Class options will be generated here -->
                         </div>
                     </div>
@@ -1103,6 +1147,8 @@
         
         // Student selection
         const studentSelect = document.getElementById('studentSelect');
+        const teacherSection = document.getElementById('teacherSection');
+        const teacherSelect = document.getElementById('teacherSelect');
         
         // Camera elements
         const cameraVideo = document.getElementById('cameraVideo');
@@ -1163,6 +1209,10 @@
         const homeworkClassSelection = document.getElementById('homeworkClassSelection');
         const messageClassSelection = document.getElementById('messageClassSelection');
 
+        // Remember me checkboxes
+        const rememberMe = document.getElementById('rememberMe');
+        const studentRememberMe = document.getElementById('studentRememberMe');
+
         // Theme functionality
         themeToggle.addEventListener('click', () => {
             const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -1184,22 +1234,39 @@
             themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
         }
 
+        // Teachers data
+        const teachers = {
+            primary: [
+                { id: 'srinivas', name: 'Srinivas', subject: 'Primary Teacher', password: 'kvmlk' },
+                { id: 'srikanth', name: 'Srikanth', subject: 'Primary Teacher', password: 'kvmlk' }
+            ],
+            secondary: [
+                { id: 'narasinga', name: 'Narasinga Rao', subject: 'Chemistry', password: 'kvmlk' },
+                { id: 'vara', name: 'Vara Kumar', subject: 'Physics', password: 'kvmlk' }
+            ]
+        };
+
         // Generate class options (1st to 12th, sections A, B, C)
-        function generateClassOptions(container) {
+        function generateClassOptions(container, multiSelect = false) {
             container.innerHTML = '';
             for (let grade = 1; grade <= 12; grade++) {
                 for (let section of ['A', 'B', 'C']) {
                     const classOption = document.createElement('div');
-                    classOption.className = 'class-option';
+                    classOption.className = multiSelect ? 'multi-option' : 'class-option';
                     classOption.textContent = `${grade}${section}`;
                     classOption.dataset.class = `${grade}${section}`;
                     classOption.addEventListener('click', () => {
-                        // Deselect all other options in this container
-                        container.querySelectorAll('.class-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        // Select this option
-                        classOption.classList.add('selected');
+                        if (multiSelect) {
+                            // Toggle selection for multi-select
+                            classOption.classList.toggle('selected');
+                        } else {
+                            // Deselect all other options in this container
+                            container.querySelectorAll('.class-option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            // Select this option
+                            classOption.classList.add('selected');
+                        }
                     });
                     container.appendChild(classOption);
                 }
@@ -1214,13 +1281,13 @@
         ];
 
         let homeworks = JSON.parse(localStorage.getItem('homeworks')) || [
-            { id: 1, title: "Math Assignment", description: "Complete exercises 5.1 to 5.5 from textbook", dueDate: "2023-10-15", assignedDate: "2023-10-10", class: "10A", viewedBy: [1] },
-            { id: 2, title: "Science Project", description: "Prepare a model of solar system with proper labels", dueDate: "2023-10-20", assignedDate: "2023-10-12", class: "10A", viewedBy: [1, 2] }
+            { id: 1, title: "Math Assignment", description: "Complete exercises 5.1 to 5.5 from textbook", dueDate: "2023-10-15", assignedDate: "2023-10-10", classes: ["10A"], viewedBy: [1] },
+            { id: 2, title: "Science Project", description: "Prepare a model of solar system with proper labels", dueDate: "2023-10-20", assignedDate: "2023-10-12", classes: ["10A"], viewedBy: [1, 2] }
         ];
 
         let messages = JSON.parse(localStorage.getItem('messages')) || [
-            { id: 1, title: "Parent-Teacher Meeting", content: "There will be a parent-teacher meeting on 25th October 2023.", date: "2023-10-05", class: "10A" },
-            { id: 2, title: "School Holiday", content: "School will remain closed on 2nd November 2023 for Diwali celebration.", date: "2023-10-08", class: "10A" }
+            { id: 1, title: "Parent-Teacher Meeting", content: "There will be a parent-teacher meeting on 25th October 2023.", date: "2023-10-05", classes: ["10A"] },
+            { id: 2, title: "School Holiday", content: "School will remain closed on 2nd November 2023 for Diwali celebration.", date: "2023-10-08", classes: ["10A"] }
         ];
 
         // Save data to localStorage
@@ -1239,6 +1306,21 @@
                 option.textContent = `${student.name} (Class ${student.class})`;
                 studentSelect.appendChild(option);
             });
+        }
+
+        // Populate teacher dropdown based on section
+        function populateTeacherDropdown() {
+            teacherSelect.innerHTML = '<option value="">-- Select Teacher --</option>';
+            const section = teacherSection.value;
+            
+            if (section && teachers[section]) {
+                teachers[section].forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = `${teacher.name} (${teacher.subject})`;
+                    teacherSelect.appendChild(option);
+                });
+            }
         }
 
         // Camera functions
@@ -1297,6 +1379,31 @@
             return false;
         }
 
+        // Auto-login functionality
+        function checkAutoLogin() {
+            const savedTeacher = localStorage.getItem('savedTeacher');
+            const savedStudent = localStorage.getItem('savedStudent');
+            
+            if (savedTeacher) {
+                const teacherData = JSON.parse(savedTeacher);
+                document.getElementById('teacherSection').value = teacherData.section;
+                populateTeacherDropdown();
+                document.getElementById('teacherSelect').value = teacherData.id;
+                document.getElementById('teacherPassword').value = teacherData.password;
+                document.getElementById('rememberMe').checked = true;
+                teacherLoginBtn.click();
+            } else if (savedStudent) {
+                const studentData = JSON.parse(savedStudent);
+                document.getElementById('studentSelect').value = studentData.id;
+                document.getElementById('studentRememberMe').checked = true;
+                
+                // Auto-start face scan for students
+                setTimeout(() => {
+                    startScanBtn.click();
+                }, 500);
+            }
+        }
+
         // Event Listeners
         teacherPortalBtn.addEventListener('click', () => {
             portalSelection.style.display = 'none';
@@ -1325,24 +1432,44 @@
             studentDashboard.classList.add('active');
         });
 
+        teacherSection.addEventListener('change', populateTeacherDropdown);
+
         teacherLoginBtn.addEventListener('click', () => {
             const password = document.getElementById('teacherPassword').value;
-            const teacherSelect = document.getElementById('teacherSelect');
-            const selectedTeacher = teacherSelect.options[teacherSelect.selectedIndex].text;
+            const selectedTeacherId = teacherSelect.value;
+            const section = teacherSection.value;
             
-            if (password === 'kvmlk' && selectedTeacher !== '-- Select Teacher --') {
+            if (!section) {
+                alert('Please select a section first.');
+                return;
+            }
+            
+            const teacher = teachers[section].find(t => t.id === selectedTeacherId);
+            
+            if (password === teacher.password && selectedTeacherId) {
+                // Save login info if remember me is checked
+                if (rememberMe.checked) {
+                    localStorage.setItem('savedTeacher', JSON.stringify({
+                        id: selectedTeacherId,
+                        section: section,
+                        password: password
+                    }));
+                } else {
+                    localStorage.removeItem('savedTeacher');
+                }
+                
                 teacherLogin.classList.remove('active');
                 teacherDashboard.classList.add('active');
                 renderStudents();
                 renderHomeworks();
                 renderMessages();
                 generateClassOptions(studentClassSelection);
-                generateClassOptions(homeworkClassSelection);
-                generateClassOptions(messageClassSelection);
+                generateClassOptions(homeworkClassSelection, true);
+                generateClassOptions(messageClassSelection, true);
                 
                 // Set teacher info
-                teacherName.textContent = selectedTeacher;
-                teacherDetails.textContent = `Kendriya Vidyalaya Malkapuram | ${selectedTeacher === 'Narasinga Rao' ? 'Mathematics Teacher' : 'Science Teacher'}`;
+                teacherName.textContent = teacher.name;
+                teacherDetails.textContent = `Kendriya Vidyalaya Malkapuram | ${teacher.subject}`;
             } else {
                 alert('Please select a teacher and enter correct password.');
             }
@@ -1374,6 +1501,16 @@
             
             if (verified) {
                 scanStatus.textContent = 'Face verified successfully!';
+                
+                // Save login info if remember me is checked
+                if (studentRememberMe.checked) {
+                    localStorage.setItem('savedStudent', JSON.stringify({
+                        id: selectedStudentId
+                    }));
+                } else {
+                    localStorage.removeItem('savedStudent');
+                }
+                
                 setTimeout(() => {
                     studentLogin.classList.remove('active');
                     studentDashboard.classList.add('active');
@@ -1437,6 +1574,7 @@
             teacherDashboard.classList.remove('active');
             portalSelection.style.display = 'grid';
             document.getElementById('teacherPassword').value = '';
+            localStorage.removeItem('savedTeacher');
         });
 
         studentLogoutBtn.addEventListener('click', () => {
@@ -1447,6 +1585,7 @@
             studentCaptureBtn.style.display = 'none';
             studentScanStatus.textContent = 'Face scan required to view homework';
             stopCamera(studentCameraVideo);
+            localStorage.removeItem('savedStudent');
         });
 
         // Tab switching
@@ -1527,12 +1666,14 @@
             const title = document.getElementById('homeworkTitle').value;
             const description = document.getElementById('homeworkDescription').value;
             const dueDate = document.getElementById('homeworkDueDate').value;
-            const selectedClass = homeworkClassSelection.querySelector('.selected');
+            const selectedClasses = Array.from(homeworkClassSelection.querySelectorAll('.selected'));
             
-            if (!title || !description || !dueDate || !selectedClass) {
-                alert('Please fill all fields and select a class.');
+            if (!title || !description || !dueDate || selectedClasses.length === 0) {
+                alert('Please fill all fields and select at least one class.');
                 return;
             }
+            
+            const classes = selectedClasses.map(option => option.dataset.class);
             
             const newHomework = {
                 id: homeworks.length > 0 ? Math.max(...homeworks.map(h => h.id)) + 1 : 1,
@@ -1540,7 +1681,7 @@
                 description,
                 dueDate,
                 assignedDate: new Date().toISOString().split('T')[0],
-                class: selectedClass.dataset.class,
+                classes: classes,
                 viewedBy: []
             };
             
@@ -1552,7 +1693,7 @@
             document.getElementById('homeworkTitle').value = '';
             document.getElementById('homeworkDescription').value = '';
             document.getElementById('homeworkDueDate').value = '';
-            homeworkClassSelection.querySelectorAll('.class-option').forEach(opt => {
+            homeworkClassSelection.querySelectorAll('.multi-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
             
@@ -1562,19 +1703,21 @@
         sendMessageBtn.addEventListener('click', () => {
             const title = document.getElementById('messageTitle').value;
             const content = document.getElementById('messageContent').value;
-            const selectedClass = messageClassSelection.querySelector('.selected');
+            const selectedClasses = Array.from(messageClassSelection.querySelectorAll('.selected'));
             
-            if (!title || !content || !selectedClass) {
-                alert('Please fill all fields and select a class.');
+            if (!title || !content || selectedClasses.length === 0) {
+                alert('Please fill all fields and select at least one class.');
                 return;
             }
+            
+            const classes = selectedClasses.map(option => option.dataset.class);
             
             const newMessage = {
                 id: messages.length > 0 ? Math.max(...messages.map(m => m.id)) + 1 : 1,
                 title,
                 content,
                 date: new Date().toISOString().split('T')[0],
-                class: selectedClass.dataset.class
+                classes: classes
             };
             
             messages.unshift(newMessage);
@@ -1584,7 +1727,7 @@
             // Clear form
             document.getElementById('messageTitle').value = '';
             document.getElementById('messageContent').value = '';
-            messageClassSelection.querySelectorAll('.class-option').forEach(opt => {
+            messageClassSelection.querySelectorAll('.multi-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
             
@@ -1627,7 +1770,7 @@
                     <p>${homework.description}</p>
                     <div class="homework-meta">
                         <span>Due: ${formatDate(homework.dueDate)}</span>
-                        <span>Class: ${homework.class}</span>
+                        <span>Classes: ${homework.classes.join(', ')}</span>
                         <span>Viewed by: ${homework.viewedBy.length} students</span>
                     </div>
                 `;
@@ -1645,7 +1788,7 @@
                     <p>${message.content}</p>
                     <div class="message-meta">
                         <span>${formatDate(message.date)}</span>
-                        <span>Class: ${message.class}</span>
+                        <span>Classes: ${message.classes.join(', ')}</span>
                     </div>
                 `;
                 messageList.appendChild(messageItem);
@@ -1658,7 +1801,7 @@
             const student = students.find(s => s.id === currentStudentId);
             
             if (student) {
-                const studentHomeworks = homeworks.filter(hw => hw.class === student.class);
+                const studentHomeworks = homeworks.filter(hw => hw.classes.includes(student.class));
                 
                 studentHomeworks.forEach(homework => {
                     const homeworkItem = document.createElement('div');
@@ -1682,7 +1825,7 @@
             const student = students.find(s => s.id === currentStudentId);
             
             if (student) {
-                const studentMessages = messages.filter(msg => msg.class === student.class);
+                const studentMessages = messages.filter(msg => msg.classes.includes(student.class));
                 
                 studentMessages.forEach(message => {
                     const messageItem = document.createElement('div');
@@ -1701,338 +1844,341 @@
 
         function renderSubjects() {
             subjectContent.innerHTML = '';
+            const currentStudentId = getCurrentStudentId();
+            const student = students.find(s => s.id === currentStudentId);
             
-            // For classes 6-8
-            const classes6to8 = document.createElement('div');
-            classes6to8.innerHTML = '<h3 style="margin-bottom: 15px;">Classes 6-8</h3>';
-            const subjectGrid1 = document.createElement('div');
-            subjectGrid1.className = 'subject-grid';
+            if (!student) return;
             
-            const subjects6to8 = [
-                { name: 'Mathematics', icon: 'fa-calculator', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Practice Worksheets', url: 'https://byjus.com/maths/worksheets/' },
-                    { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
-                ]},
-                { name: 'Science', icon: 'fa-flask', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Science Experiments', url: 'https://www.sciencebuddies.org/science-experiments' },
-                    { name: 'Video Lessons', url: 'https://www.khanacademy.org/science' }
-                ]},
-                { name: 'English', icon: 'fa-language', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                    { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                ]},
-                { name: 'Social Studies', icon: 'fa-globe-asia', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
-                    { name: 'Historical Documents', url: 'https://archive.org/' }
-                ]},
-                { name: 'Sanskrit', icon: 'fa-book', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Sanskrit Dictionary', url: 'https://www.sanskritdictionary.com/' },
-                    { name: 'Learning Resources', url: 'https://learnsanskrit.org/' }
-                ]},
-                { name: 'AI', icon: 'fa-robot', resources: [
-                    { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
-                    { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
-                    { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
-                ]},
-                { name: 'Computer', icon: 'fa-laptop-code', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
-                    { name: 'Computer Basics', url: 'https://edu.gcfglobal.org/en/computerbasics/' }
-                ]}
-            ];
+            const studentClass = parseInt(student.class);
             
-            subjects6to8.forEach(subject => {
-                const subjectCard = document.createElement('div');
-                subjectCard.className = 'subject-card';
-                subjectCard.innerHTML = `
-                    <div class="subject-icon">
-                        <i class="fas ${subject.icon}"></i>
-                    </div>
-                    <h4>${subject.name}</h4>
-                `;
-                subjectCard.addEventListener('click', () => {
-                    showSubjectResources(subject.name, subject.resources);
-                });
-                subjectGrid1.appendChild(subjectCard);
-            });
+            // Determine which subjects to show based on class
+            let subjects = [];
             
-            classes6to8.appendChild(subjectGrid1);
-            subjectContent.appendChild(classes6to8);
-            
-            // For class 9
-            const class9 = document.createElement('div');
-            class9.innerHTML = '<h3 style="margin: 30px 0 15px;">Class 9</h3>';
-            const subjectGrid2 = document.createElement('div');
-            subjectGrid2.className = 'subject-grid';
-            
-            const subjects9 = [
-                { name: 'Social Studies', icon: 'fa-globe-asia', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
-                    { name: 'Historical Documents', url: 'https://archive.org/' }
-                ]},
-                { name: 'Chemistry', icon: 'fa-vial', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Periodic Table', url: 'https://www.rsc.org/periodic-table' },
-                    { name: 'Chemistry Experiments', url: 'https://edu.rsc.org/resources/experiments' }
-                ]},
-                { name: 'Physics', icon: 'fa-atom', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Physics Simulations', url: 'https://phet.colorado.edu/en/simulations/filter?subjects=physics' },
-                    { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/physics' }
-                ]},
-                { name: 'Mathematics', icon: 'fa-calculator', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Practice Problems', url: 'https://byjus.com/maths/class-9-maths-questions/' },
-                    { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
-                ]},
-                { name: 'English', icon: 'fa-language', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                    { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                ]},
-                { name: 'Hindi', icon: 'fa-language', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Hindi Grammar', url: 'https://www.hindigrammar.com/' },
-                    { name: 'Reading Materials', url: 'https://hindisahityadarpan.in/' }
-                ]},
-                { name: 'Sanskrit', icon: 'fa-book', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Sanskrit Dictionary', url: 'https://www.sanskritdictionary.com/' },
-                    { name: 'Learning Resources', url: 'https://learnsanskrit.org/' }
-                ]},
-                { name: 'Computer', icon: 'fa-laptop-code', resources: [
-                    { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                    { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
-                    { name: 'Computer Basics', url: 'https://edu.gcfglobal.org/en/computerbasics/' }
-                ]},
-                { name: 'AI', icon: 'fa-robot', resources: [
-                    { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
-                    { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
-                    { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
-                ]}
-            ];
-            
-            subjects9.forEach(subject => {
-                const subjectCard = document.createElement('div');
-                subjectCard.className = 'subject-card';
-                subjectCard.innerHTML = `
-                    <div class="subject-icon">
-                        <i class="fas ${subject.icon}"></i>
-                    </div>
-                    <h4>${subject.name}</h4>
-                `;
-                subjectCard.addEventListener('click', () => {
-                    showSubjectResources(subject.name, subject.resources);
-                });
-                subjectGrid2.appendChild(subjectCard);
-            });
-            
-            class9.appendChild(subjectGrid2);
-            subjectContent.appendChild(class9);
-            
-            // For class 11
-            const class11 = document.createElement('div');
-            class11.innerHTML = '<h3 style="margin: 30px 0 15px;">Class 11</h3>';
-            const streamSelection = document.createElement('div');
-            streamSelection.className = 'stream-selection';
-            
-            const streams = [
-                {
-                    name: 'MPC (Mathematics, Physics, Chemistry)',
-                    subjects: [
-                        { name: 'Mathematics', icon: 'fa-calculator', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Advanced Problems', url: 'https://byjus.com/maths/class-11-maths-questions/' },
-                            { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
-                        ]},
-                        { name: 'Physics', icon: 'fa-atom', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Physics Simulations', url: 'https://phet.colorado.edu/en/simulations/filter?subjects=physics' },
-                            { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/physics' }
-                        ]},
-                        { name: 'Chemistry', icon: 'fa-vial', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Periodic Table', url: 'https://www.rsc.org/periodic-table' },
-                            { name: 'Chemistry Experiments', url: 'https://edu.rsc.org/resources/experiments' }
-                        ]},
-                        { name: 'English', icon: 'fa-language', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                            { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                        ]},
-                        { name: 'AI', icon: 'fa-robot', resources: [
-                            { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
-                            { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
-                            { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
-                        ]},
-                        { name: 'Computer Science', icon: 'fa-laptop-code', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
-                            { name: 'Programming Resources', url: 'https://www.freecodecamp.org/' }
-                        ]}
-                    ]
-                },
-                {
-                    name: 'BIPC (Biology, Physics, Chemistry)',
-                    subjects: [
-                        { name: 'Biology', icon: 'fa-dna', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Biology Diagrams', url: 'https://www.biologydiscussion.com/diagram/' },
-                            { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/biology' }
-                        ]},
-                        { name: 'Physics', icon: 'fa-atom', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Physics Simulations', url: 'https://phet.colorado.edu/en/simulations/filter?subjects=physics' },
-                            { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/physics' }
-                        ]},
-                        { name: 'Chemistry', icon: 'fa-vial', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Periodic Table', url: 'https://www.rsc.org/periodic-table' },
-                            { name: 'Chemistry Experiments', url: 'https://edu.rsc.org/resources/experiments' }
-                        ]},
-                        { name: 'Hindi', icon: 'fa-language', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Hindi Grammar', url: 'https://www.hindigrammar.com/' },
-                            { name: 'Reading Materials', url: 'https://hindisahityadarpan.in/' }
-                        ]},
-                        { name: 'AI', icon: 'fa-robot', resources: [
-                            { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
-                            { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
-                            { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
-                        ]},
-                        { name: 'English', icon: 'fa-language', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                            { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                        ]}
-                    ]
-                },
-                {
-                    name: 'Commerce',
-                    subjects: [
-                        { name: 'Accountancy', icon: 'fa-calculator', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Accounting Principles', url: 'https://www.accountingtools.com/articles' },
-                            { name: 'Practice Problems', url: 'https://www.accountingcoach.com/' }
-                        ]},
-                        { name: 'Business Studies', icon: 'fa-briefcase', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Case Studies', url: 'https://hbr.org/store/case-studies' },
-                            { name: 'Business Concepts', url: 'https://www.investopedia.com/' }
-                        ]},
-                        { name: 'Economics', icon: 'fa-chart-line', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Economic Data', url: 'https://data.worldbank.org/' },
-                            { name: 'Economic Concepts', url: 'https://www.economist.com/' }
-                        ]},
-                        { name: 'Mathematics', icon: 'fa-calculator', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Business Mathematics', url: 'https://byjus.com/commerce/business-mathematics/' },
-                            { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
-                        ]},
-                        { name: 'English', icon: 'fa-language', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                            { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                        ]},
-                        { name: 'Computer Science', icon: 'fa-laptop-code', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
-                            { name: 'Programming Resources', url: 'https://www.freecodecamp.org/' }
-                        ]}
-                    ]
-                },
-                {
-                    name: 'Humanities',
-                    subjects: [
-                        { name: 'History', icon: 'fa-monument', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Historical Documents', url: 'https://archive.org/' },
-                            { name: 'Historical Maps', url: 'https://www.oldmapsonline.org/' }
-                        ]},
-                        { name: 'Political Science', icon: 'fa-landmark', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Political Documents', url: 'https://www.constitution.org/' },
-                            { name: 'Current Affairs', url: 'https://www.prsindia.org/' }
-                        ]},
-                        { name: 'Geography', icon: 'fa-globe-asia', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
-                            { name: 'Geographical Data', url: 'https://www.nationalgeographic.org/' }
-                        ]},
-                        { name: 'Economics', icon: 'fa-chart-line', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Economic Data', url: 'https://data.worldbank.org/' },
-                            { name: 'Economic Concepts', url: 'https://www.economist.com/' }
-                        ]},
-                        { name: 'Psychology', icon: 'fa-brain', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Psychology Resources', url: 'https://www.apa.org/education-career/k12' },
-                            { name: 'Psychological Studies', url: 'https://www.simplypsychology.org/' }
-                        ]},
-                        { name: 'English', icon: 'fa-language', resources: [
-                            { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
-                            { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
-                            { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
-                        ]}
-                    ]
-                }
-            ];
-            
-            streams.forEach(stream => {
-                const streamCard = document.createElement('div');
-                streamCard.className = 'stream-card';
-                streamCard.innerHTML = `
-                    <h3>${stream.name}</h3>
-                    <ul>
-                        ${stream.subjects.map(subject => `<li>${subject.name}</li>`).join('')}
-                    </ul>
-                `;
-                streamCard.addEventListener('click', () => {
-                    streamSelection.querySelectorAll('.stream-card').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-                    streamCard.classList.add('selected');
-                    
-                    // Show subjects for selected stream
-                    const streamSubjects = document.createElement('div');
-                    streamSubjects.className = 'subject-grid';
-                    streamSubjects.style.marginTop = '20px';
-                    
-                    stream.subjects.forEach(subject => {
-                        const subjectCard = document.createElement('div');
-                        subjectCard.className = 'subject-card';
-                        subjectCard.innerHTML = `
-                            <div class="subject-icon">
-                                <i class="fas ${subject.icon}"></i>
-                            </div>
-                            <h4>${subject.name}</h4>
-                        `;
-                        subjectCard.addEventListener('click', () => {
-                            showSubjectResources(subject.name, subject.resources);
-                        });
-                        streamSubjects.appendChild(subjectCard);
-                    });
-                    
-                    // Remove previous subjects if any
-                    const existingSubjects = class11.querySelector('.subject-grid');
-                    if (existingSubjects) {
-                        existingSubjects.remove();
+            if (studentClass >= 1 && studentClass <= 5) {
+                // Primary classes (1-5)
+                subjects = [
+                    { name: 'Mathematics', icon: 'fa-calculator', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Practice Worksheets', url: 'https://byjus.com/maths/worksheets/' },
+                        { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
+                    ]},
+                    { name: 'English', icon: 'fa-language', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                        { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                    ]},
+                    { name: 'Hindi', icon: 'fa-language', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Hindi Grammar', url: 'https://www.hindigrammar.com/' },
+                        { name: 'Reading Materials', url: 'https://hindisahityadarpan.in/' }
+                    ]},
+                    { name: 'Environmental Studies', icon: 'fa-leaf', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Science Experiments', url: 'https://www.sciencebuddies.org/science-experiments' },
+                        { name: 'Environmental Activities', url: 'https://www.epa.gov/students' }
+                    ]}
+                ];
+            } else if (studentClass >= 6 && studentClass <= 8) {
+                // Middle school (6-8)
+                subjects = [
+                    { name: 'Mathematics', icon: 'fa-calculator', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Practice Worksheets', url: 'https://byjus.com/maths/worksheets/' },
+                        { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
+                    ]},
+                    { name: 'Science', icon: 'fa-flask', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Science Experiments', url: 'https://www.sciencebuddies.org/science-experiments' },
+                        { name: 'Video Lessons', url: 'https://www.khanacademy.org/science' }
+                    ]},
+                    { name: 'English', icon: 'fa-language', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                        { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                    ]},
+                    { name: 'Social Studies', icon: 'fa-globe-asia', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
+                        { name: 'Historical Documents', url: 'https://archive.org/' }
+                    ]},
+                    { name: 'Sanskrit', icon: 'fa-book', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Sanskrit Dictionary', url: 'https://www.sanskritdictionary.com/' },
+                        { name: 'Learning Resources', url: 'https://learnsanskrit.org/' }
+                    ]},
+                    { name: 'AI', icon: 'fa-robot', resources: [
+                        { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
+                        { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
+                        { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
+                    ]},
+                    { name: 'Computer', icon: 'fa-laptop-code', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
+                        { name: 'Computer Basics', url: 'https://edu.gcfglobal.org/en/computerbasics/' }
+                    ]}
+                ];
+            } else if (studentClass === 9 || studentClass === 10) {
+                // Secondary (9-10)
+                subjects = [
+                    { name: 'Mathematics', icon: 'fa-calculator', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Practice Problems', url: 'https://byjus.com/maths/class-9-maths-questions/' },
+                        { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
+                    ]},
+                    { name: 'Science', icon: 'fa-flask', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Science Experiments', url: 'https://www.sciencebuddies.org/science-experiments' },
+                        { name: 'Video Lessons', url: 'https://www.khanacademy.org/science' }
+                    ]},
+                    { name: 'English', icon: 'fa-language', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                        { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                    ]},
+                    { name: 'Social Studies', icon: 'fa-globe-asia', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
+                        { name: 'Historical Documents', url: 'https://archive.org/' }
+                    ]},
+                    { name: 'Hindi', icon: 'fa-language', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Hindi Grammar', url: 'https://www.hindigrammar.com/' },
+                        { name: 'Reading Materials', url: 'https://hindisahityadarpan.in/' }
+                    ]},
+                    { name: 'Sanskrit', icon: 'fa-book', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Sanskrit Dictionary', url: 'https://www.sanskritdictionary.com/' },
+                        { name: 'Learning Resources', url: 'https://learnsanskrit.org/' }
+                    ]},
+                    { name: 'Computer', icon: 'fa-laptop-code', resources: [
+                        { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                        { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
+                        { name: 'Computer Basics', url: 'https://edu.gcfglobal.org/en/computerbasics/' }
+                    ]},
+                    { name: 'AI', icon: 'fa-robot', resources: [
+                        { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
+                        { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
+                        { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
+                    ]}
+                ];
+            } else if (studentClass === 11 || studentClass === 12) {
+                // Senior secondary (11-12)
+                const streamSelection = document.createElement('div');
+                streamSelection.className = 'stream-selection';
+                
+                const streams = [
+                    {
+                        name: 'MPC (Mathematics, Physics, Chemistry)',
+                        subjects: [
+                            { name: 'Mathematics', icon: 'fa-calculator', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Advanced Problems', url: 'https://byjus.com/maths/class-11-maths-questions/' },
+                                { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
+                            ]},
+                            { name: 'Physics', icon: 'fa-atom', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Physics Simulations', url: 'https://phet.colorado.edu/en/simulations/filter?subjects=physics' },
+                                { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/physics' }
+                            ]},
+                            { name: 'Chemistry', icon: 'fa-vial', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Periodic Table', url: 'https://www.rsc.org/periodic-table' },
+                                { name: 'Chemistry Experiments', url: 'https://edu.rsc.org/resources/experiments' }
+                            ]},
+                            { name: 'English', icon: 'fa-language', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                                { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                            ]},
+                            { name: 'AI', icon: 'fa-robot', resources: [
+                                { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
+                                { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
+                                { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
+                            ]},
+                            { name: 'Computer Science', icon: 'fa-laptop-code', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
+                                { name: 'Programming Resources', url: 'https://www.freecodecamp.org/' }
+                            ]}
+                        ]
+                    },
+                    {
+                        name: 'BIPC (Biology, Physics, Chemistry)',
+                        subjects: [
+                            { name: 'Biology', icon: 'fa-dna', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Biology Diagrams', url: 'https://www.biologydiscussion.com/diagram/' },
+                                { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/biology' }
+                            ]},
+                            { name: 'Physics', icon: 'fa-atom', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Physics Simulations', url: 'https://phet.colorado.edu/en/simulations/filter?subjects=physics' },
+                                { name: 'Video Lessons', url: 'https://www.khanacademy.org/science/physics' }
+                            ]},
+                            { name: 'Chemistry', icon: 'fa-vial', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Periodic Table', url: 'https://www.rsc.org/periodic-table' },
+                                { name: 'Chemistry Experiments', url: 'https://edu.rsc.org/resources/experiments' }
+                            ]},
+                            { name: 'Hindi', icon: 'fa-language', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Hindi Grammar', url: 'https://www.hindigrammar.com/' },
+                                { name: 'Reading Materials', url: 'https://hindisahityadarpan.in/' }
+                            ]},
+                            { name: 'AI', icon: 'fa-robot', resources: [
+                                { name: 'CBSE AI Curriculum', url: 'https://cbseacademic.nic.in/ai.html' },
+                                { name: 'AI Projects', url: 'https://www.element14.com/community/community/studentprograms/ai' },
+                                { name: 'Learning Platform', url: 'https://www.coursera.org/learn/ai-for-everyone' }
+                            ]},
+                            { name: 'English', icon: 'fa-language', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                                { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                            ]}
+                        ]
+                    },
+                    {
+                        name: 'Commerce',
+                        subjects: [
+                            { name: 'Accountancy', icon: 'fa-calculator', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Accounting Principles', url: 'https://www.accountingtools.com/articles' },
+                                { name: 'Practice Problems', url: 'https://www.accountingcoach.com/' }
+                            ]},
+                            { name: 'Business Studies', icon: 'fa-briefcase', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Case Studies', url: 'https://hbr.org/store/case-studies' },
+                                { name: 'Business Concepts', url: 'https://www.investopedia.com/' }
+                            ]},
+                            { name: 'Economics', icon: 'fa-chart-line', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Economic Data', url: 'https://data.worldbank.org/' },
+                                { name: 'Economic Concepts', url: 'https://www.economist.com/' }
+                            ]},
+                            { name: 'Mathematics', icon: 'fa-calculator', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Business Mathematics', url: 'https://byjus.com/commerce/business-mathematics/' },
+                                { name: 'Video Lessons', url: 'https://www.khanacademy.org/math' }
+                            ]},
+                            { name: 'English', icon: 'fa-language', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                                { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                            ]},
+                            { name: 'Computer Science', icon: 'fa-laptop-code', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Coding Practice', url: 'https://www.codecademy.com/' },
+                                { name: 'Programming Resources', url: 'https://www.freecodecamp.org/' }
+                            ]}
+                        ]
+                    },
+                    {
+                        name: 'Humanities',
+                        subjects: [
+                            { name: 'History', icon: 'fa-monument', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Historical Documents', url: 'https://archive.org/' },
+                                { name: 'Historical Maps', url: 'https://www.oldmapsonline.org/' }
+                            ]},
+                            { name: 'Political Science', icon: 'fa-landmark', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Political Documents', url: 'https://www.constitution.org/' },
+                                { name: 'Current Affairs', url: 'https://www.prsindia.org/' }
+                            ]},
+                            { name: 'Geography', icon: 'fa-globe-asia', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Maps and Atlas', url: 'https://www.mapsofindia.com/' },
+                                { name: 'Geographical Data', url: 'https://www.nationalgeographic.org/' }
+                            ]},
+                            { name: 'Economics', icon: 'fa-chart-line', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Economic Data', url: 'https://data.worldbank.org/' },
+                                { name: 'Economic Concepts', url: 'https://www.economist.com/' }
+                            ]},
+                            { name: 'Psychology', icon: 'fa-brain', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Psychology Resources', url: 'https://www.apa.org/education-career/k12' },
+                                { name: 'Psychological Studies', url: 'https://www.simplypsychology.org/' }
+                            ]},
+                            { name: 'English', icon: 'fa-language', resources: [
+                                { name: 'NCERT Textbook', url: 'https://ncert.nic.in/textbook.php' },
+                                { name: 'Grammar Exercises', url: 'https://www.englishgrammar.org/exercises/' },
+                                { name: 'Reading Materials', url: 'https://www.gutenberg.org/' }
+                            ]}
+                        ]
                     }
-                    
-                    class11.appendChild(streamSubjects);
+                ];
+                
+                streams.forEach(stream => {
+                    const streamCard = document.createElement('div');
+                    streamCard.className = 'stream-card';
+                    streamCard.innerHTML = `
+                        <h3>${stream.name}</h3>
+                        <ul>
+                            ${stream.subjects.map(subject => `<li>${subject.name}</li>`).join('')}
+                        </ul>
+                    `;
+                    streamCard.addEventListener('click', () => {
+                        streamSelection.querySelectorAll('.stream-card').forEach(card => {
+                            card.classList.remove('selected');
+                        });
+                        streamCard.classList.add('selected');
+                        
+                        // Show subjects for selected stream
+                        const streamSubjects = document.createElement('div');
+                        streamSubjects.className = 'subject-grid';
+                        streamSubjects.style.marginTop = '20px';
+                        
+                        stream.subjects.forEach(subject => {
+                            const subjectCard = document.createElement('div');
+                            subjectCard.className = 'subject-card';
+                            subjectCard.innerHTML = `
+                                <div class="subject-icon">
+                                    <i class="fas ${subject.icon}"></i>
+                                </div>
+                                <h4>${subject.name}</h4>
+                            `;
+                            subjectCard.addEventListener('click', () => {
+                                showSubjectResources(subject.name, subject.resources);
+                            });
+                            streamSubjects.appendChild(subjectCard);
+                        });
+                        
+                        // Remove previous subjects if any
+                        const existingSubjects = subjectContent.querySelector('.subject-grid');
+                        if (existingSubjects) {
+                            existingSubjects.remove();
+                        }
+                        
+                        subjectContent.appendChild(streamSubjects);
+                    });
+                    streamSelection.appendChild(streamCard);
                 });
-                streamSelection.appendChild(streamCard);
+                
+                subjectContent.appendChild(streamSelection);
+                return;
+            }
+            
+            // For classes 1-10, show subjects directly
+            const subjectGrid = document.createElement('div');
+            subjectGrid.className = 'subject-grid';
+            
+            subjects.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                subjectCard.innerHTML = `
+                    <div class="subject-icon">
+                        <i class="fas ${subject.icon}"></i>
+                    </div>
+                    <h4>${subject.name}</h4>
+                `;
+                subjectCard.addEventListener('click', () => {
+                    showSubjectResources(subject.name, subject.resources);
+                });
+                subjectGrid.appendChild(subjectCard);
             });
             
-            class11.appendChild(streamSelection);
-            subjectContent.appendChild(class11);
+            subjectContent.appendChild(subjectGrid);
         }
 
         function showSubjectResources(subjectName, resources) {
@@ -2105,6 +2251,9 @@
         renderStudentMessages();
         renderSubjects();
         populateStudentDropdown();
+        
+        // Check for auto-login on page load
+        window.addEventListener('load', checkAutoLogin);
     </script>
 </body>
 </html>
