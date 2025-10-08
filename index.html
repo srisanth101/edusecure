@@ -6,6 +6,7 @@
     <title>Kendriya Vidyalaya Malkapuram - Educational Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* All your existing CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -90,6 +91,11 @@
             color: var(--text);
             font-weight: 500;
             box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
         }
 
         .logo {
@@ -281,6 +287,14 @@
             background: #e5940b;
         }
 
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
         .back-btn {
             margin-top: 15px;
         }
@@ -417,6 +431,7 @@
             transition: transform 0.2s ease;
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
+            position: relative;
         }
 
         .student-card:hover {
@@ -474,6 +489,40 @@
 
         .contact-icon.phone {
             background: var(--primary);
+        }
+
+        .student-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-size: 14px;
+            border: none;
+        }
+
+        .action-btn.edit {
+            background: var(--warning);
+        }
+
+        .action-btn.delete {
+            background: var(--danger);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
         }
 
         .homework-item, .message-item {
@@ -552,6 +601,12 @@
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card-bg);
         }
 
         .class-option {
@@ -696,6 +751,12 @@
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card-bg);
         }
 
         .multi-option {
@@ -751,6 +812,10 @@
             .subject-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
+            
+            .class-selection, .multi-select {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
         }
     </style>
 </head>
@@ -759,13 +824,13 @@
         <header>
             <div class="theme-switch">
                 <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i> Dark Mode
+                    <i class="fas fa-moon"></i>
                 </button>
             </div>
             <div class="logo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kendriya_Vidyalaya_logo.svg/1200px-Kendriya_Vidyalaya_logo.svg.png" alt="KV Malkapuram Logo">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpFhqD5C89uDm3t67YDcKkEy8uj-5szXTLnZn05dr99uENL5cZtVS4M8sffWMvauKsZrvuNNSbxKAHWGCMNbR2gwFW-r4vigAamrJ2N0IE_VmANAncYqbj73Q_ScAWzGJ9T7FLz6BBQp9zkT0JOxFlsTgtunnpdlO2fvWzfyxivTGK3efe5kPBraHmZu4" alt="KV Malkapuram Logo">
             </div>
-            <h1>Kendriya Vidyalaya Malkapuram</h1>
+            <h1>WduXpress</h1>
             <p class="subtitle">Connect, Learn, and Grow Together</p>
         </header>
 
@@ -1218,11 +1283,11 @@
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             if (isDark) {
                 document.body.removeAttribute('data-theme');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                 localStorage.setItem('theme', 'light');
             } else {
                 document.body.setAttribute('data-theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('theme', 'dark');
             }
         });
@@ -1231,7 +1296,7 @@
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.setAttribute('data-theme', 'dark');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
 
         // Teachers data
@@ -1408,6 +1473,7 @@
         teacherPortalBtn.addEventListener('click', () => {
             portalSelection.style.display = 'none';
             teacherLogin.classList.add('active');
+            populateTeacherDropdown();
         });
 
         studentPortalBtn.addEventListener('click', () => {
@@ -1463,9 +1529,6 @@
                 renderStudents();
                 renderHomeworks();
                 renderMessages();
-                generateClassOptions(studentClassSelection);
-                generateClassOptions(homeworkClassSelection, true);
-                generateClassOptions(messageClassSelection, true);
                 
                 // Set teacher info
                 teacherName.textContent = teacher.name;
@@ -1741,6 +1804,14 @@
                 const studentCard = document.createElement('div');
                 studentCard.className = 'student-card';
                 studentCard.innerHTML = `
+                    <div class="student-actions">
+                        <button class="action-btn edit" onclick="editStudent(${student.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteStudent(${student.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                     <div class="student-img">
                         ${student.image ? `<img src="${student.image}" alt="${student.name}">` : `<i class="fas fa-user"></i>`}
                     </div>
@@ -1840,6 +1911,123 @@
                     studentMessageList.appendChild(messageItem);
                 });
             }
+        }
+
+        // Student management functions
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(s => s.id !== studentId);
+                saveData();
+                renderStudents();
+                populateStudentDropdown();
+                alert('Student deleted successfully!');
+            }
+        }
+
+        function editStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // Fill the form with student data
+            document.getElementById('studentName').value = student.name;
+            document.getElementById('studentDob').value = student.dob;
+            document.getElementById('studentAdmissionNo').value = student.admissionNo;
+            document.getElementById('studentRollNo').value = student.rollNo;
+            document.getElementById('studentPhone').value = student.phone;
+            
+            // Select the class
+            studentClassSelection.querySelectorAll('.class-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.class === student.class) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            // Change button text and functionality
+            const addBtn = document.getElementById('addStudentBtn');
+            addBtn.innerHTML = '<i class="fas fa-save"></i> Update Student';
+            addBtn.onclick = function() {
+                updateStudent(studentId);
+            };
+            
+            // Scroll to form
+            document.getElementById('studentsTab').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateStudent(studentId) {
+            const studentIndex = students.findIndex(s => s.id === studentId);
+            if (studentIndex === -1) return;
+            
+            const name = document.getElementById('studentName').value;
+            const dob = document.getElementById('studentDob').value;
+            const admissionNo = document.getElementById('studentAdmissionNo').value;
+            const rollNo = document.getElementById('studentRollNo').value;
+            const phone = document.getElementById('studentPhone').value;
+            const selectedClass = studentClassSelection.querySelector('.selected');
+            const imageFile = document.getElementById('studentImage').files[0];
+            
+            if (!name || !dob || !admissionNo || !rollNo || !phone || !selectedClass) {
+                alert('Please fill all fields and select a class.');
+                return;
+            }
+            
+            if (imageFile) {
+                // Convert image to base64 for storage
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    students[studentIndex] = {
+                        ...students[studentIndex],
+                        name,
+                        dob,
+                        admissionNo,
+                        rollNo: parseInt(rollNo),
+                        phone,
+                        class: selectedClass.dataset.class,
+                        image: e.target.result
+                    };
+                    
+                    saveData();
+                    renderStudents();
+                    populateStudentDropdown();
+                    resetStudentForm();
+                    alert('Student updated successfully!');
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                students[studentIndex] = {
+                    ...students[studentIndex],
+                    name,
+                    dob,
+                    admissionNo,
+                    rollNo: parseInt(rollNo),
+                    phone,
+                    class: selectedClass.dataset.class
+                };
+                
+                saveData();
+                renderStudents();
+                populateStudentDropdown();
+                resetStudentForm();
+                alert('Student updated successfully!');
+            }
+        }
+
+        function resetStudentForm() {
+            document.getElementById('studentImage').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentDob').value = '';
+            document.getElementById('studentAdmissionNo').value = '';
+            document.getElementById('studentRollNo').value = '';
+            document.getElementById('studentPhone').value = '';
+            studentClassSelection.querySelectorAll('.class-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            const addBtn = document.getElementById('addStudentBtn');
+            addBtn.innerHTML = '<i class="fas fa-plus"></i> Add Student';
+            addBtn.onclick = function() {
+                addStudentBtn.click();
+            };
         }
 
         function renderSubjects() {
@@ -2244,16 +2432,26 @@
         }
 
         // Initialize
-        renderStudents();
-        renderHomeworks();
-        renderMessages();
-        renderStudentHomework();
-        renderStudentMessages();
-        renderSubjects();
-        populateStudentDropdown();
-        
-        // Check for auto-login on page load
-        window.addEventListener('load', checkAutoLogin);
+        function initialize() {
+            // Generate class options on page load
+            generateClassOptions(studentClassSelection);
+            generateClassOptions(homeworkClassSelection, true);
+            generateClassOptions(messageClassSelection, true);
+            
+            renderStudents();
+            renderHomeworks();
+            renderMessages();
+            renderStudentHomework();
+            renderStudentMessages();
+            renderSubjects();
+            populateStudentDropdown();
+            
+            // Check for auto-login on page load
+            checkAutoLogin();
+        }
+
+        // Call initialize when the page loads
+        window.addEventListener('load', initialize);
     </script>
 </body>
 </html>
