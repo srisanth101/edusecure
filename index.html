@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KV Malkapuram - Educational Portal</title>
+    <title>EduXpress</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -66,9 +66,108 @@
             width: 100%;
         }
 
+        /* Login Page Styles */
+        .login-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-full);
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 3px solid var(--accent);
+        }
+
+        .login-logo img {
+            width: 80%;
+            height: 80%;
+            border-radius: var(--radius-full);
+            object-fit: cover;
+        }
+
+        .login-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .login-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+        }
+
+        .login-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .login-option {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .login-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-light);
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+
+        .login-option h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .login-option p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
         /* Onboarding Styles */
         .onboarding {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -334,18 +433,6 @@
             color: white;
         }
 
-        .portal-card h2 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .portal-card p {
-            color: var(--text-muted);
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
         .login-form {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -460,6 +547,181 @@
             font-size: 16px;
         }
 
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .student-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .student-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
+        }
+
+        .student-img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-full);
+            margin: 0 auto 15px;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            overflow: hidden;
+            border: 2px solid var(--primary-light);
+        }
+
+        .student-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .face-scan-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .camera-container {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            border: 3px solid var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        #cameraVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        #cameraCanvas {
+            display: none;
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 18px;
+            z-index: 10;
+        }
+
+        .scanning-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        .homework-item, .message-item {
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-light);
+            border: 1px solid var(--border);
+        }
+
+        .homework-item h4, .message-item h4 {
+            margin-bottom: 10px;
+            color: var(--primary-light);
+            font-size: 18px;
+        }
+
+        .homework-meta, .message-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-top: 12px;
+        }
+
         .footer {
             text-align: center;
             padding: 30px;
@@ -497,7 +759,7 @@
                 height: 250px;
             }
             
-            .portal-selection {
+            .portal-selection, .login-options {
                 grid-template-columns: 1fr;
             }
             
@@ -508,23 +770,72 @@
             .onboarding-buttons {
                 flex-direction: column;
             }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            
+            .tab {
+                white-space: nowrap;
+            }
+            
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .camera-container {
+                width: 250px;
+                height: 250px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-logo">
+            <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpFhqD5C89uDm3t67YDcKkEy8uj-5szXTLnZn05dr99uENL5cZtVS4M8sffWMvauKsZrvuNNSbxKAHWGCMNbR2gwFW-r4vigAamrJ2N0IE_VmANAncYqbj73Q_ScAWzGJ9T7FLz6BBQp9zkT0JOxFlsTgtunnpdlO2fvWzfyxivTGK3efe5kPBraHmZu4" alt="KV Malkapuram Logo">
+        </div>
+        <h1 class="login-title">EduXpress</h1>
+        <p class="login-subtitle">Connect, Learn, and Grow Together</p>
+        
+        <div class="login-options">
+            <div class="login-option" id="teacherLoginOption">
+                <div class="login-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h2>Teacher Portal</h2>
+                <p>Manage students, assign homework, and send important messages</p>
+            </div>
+            <div class="login-option" id="studentLoginOption">
+                <div class="login-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2>Student Portal</h2>
+                <p>Access your homework, messages, and learning resources</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Onboarding Steps -->
     <div class="onboarding" id="onboarding">
         <!-- Step 1: Welcome -->
         <div class="onboarding-step active" id="step1">
             <div class="onboarding-image">
-               <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Welcome to KV Malkapuram">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpFhqD5C89uDm3t67YDcKkEy8uj-5szXTLnZn05dr99uENL5cZtVS4M8sffWMvauKsZrvuNNSbxKAHWGCMNbR2gwFW-r4vigAamrJ2N0IE_VmANAncYqbj73Q_ScAWzGJ9T7FLz6BBQp9zkT0JOxFlsTgtunnpdlO2fvWzfyxivTGK3efe5kPBraHmZu4" alt="Welcome to KV Malkapuram">
             </div>
             <div class="onboarding-content">
-                <h2>Welcome to KV</h2>
+                <h2>Welcome to EduXpress</h2>
                 <div class="typing-text" id="typingText1"></div>
             </div>
             <div class="onboarding-buttons">
-                <button class="btn btn-secondary" id="skipOnboarding">Skip</button>
                 <button class="btn" id="nextStep1">Next</button>
             </div>
             <div class="progress-indicator">
@@ -652,29 +963,11 @@
                     </button>
                 </div>
                 <div class="logo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kendriya_Vidyalaya_logo.svg/1200px-Kendriya_Vidyalaya_logo.svg.png" alt="KV Malkapuram Logo">
+                    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhpFhqD5C89uDm3t67YDcKkEy8uj-5szXTLnZn05dr99uENL5cZtVS4M8sffWMvauKsZrvuNNSbxKAHWGCMNbR2gwFW-r4vigAamrJ2N0IE_VmANAncYqbj73Q_ScAWzGJ9T7FLz6BBQp9zkT0JOxFlsTgtunnpdlO2fvWzfyxivTGK3efe5kPBraHmZu4" alt="KV Malkapuram Logo">
                 </div>
-                <h1>Kendriya Vidyalaya Malkapuram</h1>
+                <h1>EduXpress</h1>
                 <p class="subtitle">Connect, Learn, and Grow Together</p>
             </header>
-
-            <!-- Portal Selection -->
-            <div class="portal-selection" id="portalSelection">
-                <div class="portal-card" id="teacherPortalBtn">
-                    <div class="portal-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h2>Teacher Portal</h2>
-                    <p>Manage students, assign homework, and send important messages</p>
-                </div>
-                <div class="portal-card" id="studentPortalBtn">
-                    <div class="portal-icon">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <h2>Student Portal</h2>
-                    <p>Access your homework, messages, and learning resources</p>
-                </div>
-            </div>
 
             <!-- Teacher Login -->
             <div class="login-form" id="teacherLogin">
@@ -705,19 +998,215 @@
             <!-- Student Login -->
             <div class="login-form" id="studentLogin">
                 <h2 style="margin-bottom: 20px; text-align: center;">Student Login</h2>
-                <div class="form-group">
-                    <label for="studentSelect">Select Student</label>
-                    <select id="studentSelect" class="form-control">
-                        <option value="">-- Select Student --</option>
-                        <!-- Students will be populated dynamically -->
-                    </select>
+                <div class="face-scan-container">
+                    <div class="camera-container">
+                        <video id="cameraVideo" autoplay playsinline></video>
+                        <canvas id="cameraCanvas" width="300" height="300"></canvas>
+                        <div class="scan-overlay" id="scanOverlay">
+                            <div>
+                                <i class="fas fa-camera" style="font-size: 40px; margin-bottom: 10px;"></i>
+                                <p>Camera access required</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="scanning-text" id="scanStatus">Allow camera access to continue with face verification</p>
+                    <button class="btn" id="startScanBtn">Start Face Scan</button>
+                    <button class="btn btn-success" id="captureBtn" style="display: none;">Capture & Verify</button>
                 </div>
-                <div class="form-group">
-                    <label for="studentPassword">Password</label>
-                    <input type="password" id="studentPassword" class="form-control" placeholder="Enter password">
-                </div>
-                <button class="btn btn-block" id="studentLoginBtn">Login</button>
                 <button class="btn btn-secondary btn-block back-btn" id="backFromStudentLogin">Back</button>
+            </div>
+
+            <!-- Teacher Dashboard -->
+            <div class="dashboard" id="teacherDashboard">
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiJY7J3N211LgvtEmXBQYBTrhyV4Msf-rXEkPr6Ns-BxAbOp-2rLh-V4MhUOj9pL0lhHjPbIbdYm7IxB3_wXggfa6hLq8iYu0e3NC9NThaTn61zBVjbFUgF3VPlYmS9BxqmolSzAQW1DYmUea5EiquLqysBntxklO7OQ6uBeZvCLLEkjaKnGaW7FMPakj0" alt="Teacher Avatar" id="teacherAvatar">
+                        </div>
+                        <div class="user-details">
+                            <h3 id="teacherName">Teacher Name</h3>
+                            <p id="teacherDetails">Kendriya Vidyalaya Malkapuram</p>
+                        </div>
+                    </div>
+                    <button class="btn" id="teacherLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="students">Students</button>
+                    <button class="tab" data-tab="homework">Homework</button>
+                    <button class="tab" data-tab="messages">Messages</button>
+                </div>
+
+                <div class="tab-content active" id="studentsTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Add Student Profile</h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentImage">Student Image (Required for Face Recognition)</label>
+                            <input type="file" id="studentImage" class="form-control" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentName">Full Name</label>
+                            <input type="text" id="studentName" class="form-control" placeholder="Enter student full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentDob">Date of Birth</label>
+                            <input type="date" id="studentDob" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentAdmissionNo">Admission Number</label>
+                            <input type="text" id="studentAdmissionNo" class="form-control" placeholder="Enter admission number">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentRollNo">Roll Number</label>
+                            <input type="number" id="studentRollNo" class="form-control" placeholder="Enter roll number">
+                        </div>
+                        <button class="btn btn-block" id="addStudentBtn">
+                            <i class="fas fa-plus"></i> Add Student
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Student Profiles</h3>
+                        </div>
+                        <div class="student-grid" id="studentList">
+                            <!-- Student cards will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="homeworkTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Assign Homework</h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="homeworkTitle">Homework Title</label>
+                            <input type="text" id="homeworkTitle" class="form-control" placeholder="Enter homework title">
+                        </div>
+                        <div class="form-group">
+                            <label for="homeworkDescription">Description</label>
+                            <textarea id="homeworkDescription" class="form-control" rows="4" placeholder="Enter homework details"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="homeworkDueDate">Due Date</label>
+                            <input type="date" id="homeworkDueDate" class="form-control">
+                        </div>
+                        <button class="btn btn-block" id="assignHomeworkBtn">Assign Homework</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Homework</h3>
+                        </div>
+                        <div id="homeworkList">
+                            <!-- Homework items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="messagesTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Send Message</h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="messageTitle">Message Title</label>
+                            <input type="text" id="messageTitle" class="form-control" placeholder="Enter message title">
+                        </div>
+                        <div class="form-group">
+                            <label for="messageContent">Message Content</label>
+                            <textarea id="messageContent" class="form-control" rows="4" placeholder="Enter your message"></textarea>
+                        </div>
+                        <button class="btn btn-block" id="sendMessageBtn">Send Message</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Messages</h3>
+                        </div>
+                        <div id="messageList">
+                            <!-- Message items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Dashboard -->
+            <div class="dashboard" id="studentDashboard">
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <img src="" alt="Student Avatar" id="studentAvatar">
+                        </div>
+                        <div class="user-details">
+                            <h3 id="studentName">Student Name</h3>
+                            <p id="studentDetails">Class | Roll No</p>
+                        </div>
+                    </div>
+                    <button class="btn" id="studentLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="profile">My Profile</button>
+                    <button class="tab" data-tab="studentHomework">Homework</button>
+                    <button class="tab" data-tab="studentMessages">Messages</button>
+                </div>
+
+                <div class="tab-content active" id="profileTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Student Details</h3>
+                        </div>
+                        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                            <div class="student-img">
+                                <img src="" alt="Student Image" id="profileStudentImg">
+                            </div>
+                            <div>
+                                <h3 id="profileStudentName">Student Name</h3>
+                                <p id="profileStudentClass">Class</p>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <p><strong>Date of Birth:</strong> <span id="profileDob">--</span></p>
+                                <p><strong>Admission No:</strong> <span id="profileAdmissionNo">--</span></p>
+                            </div>
+                            <div>
+                                <p><strong>Roll No:</strong> <span id="profileRollNo">--</span></p>
+                                <p><strong>School:</strong> <span id="profileSchool">Kendriya Vidyalaya Malkapuram</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="studentHomeworkTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Your Homework</h3>
+                        </div>
+                        <div id="studentHomeworkList">
+                            <!-- Student homework items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="studentMessagesTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Important Messages</h3>
+                        </div>
+                        <div id="studentMessageList">
+                            <!-- Student message items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="footer">
@@ -728,8 +1217,13 @@
 
     <script>
         // DOM Elements
+        const loginPage = document.getElementById('loginPage');
         const onboarding = document.getElementById('onboarding');
         const portalContainer = document.getElementById('portalContainer');
+        
+        // Login options
+        const teacherLoginOption = document.getElementById('teacherLoginOption');
+        const studentLoginOption = document.getElementById('studentLoginOption');
         
         // Onboarding steps
         const step1 = document.getElementById('step1');
@@ -739,7 +1233,6 @@
         const step5 = document.getElementById('step5');
         
         // Onboarding buttons
-        const skipOnboarding = document.getElementById('skipOnboarding');
         const nextStep1 = document.getElementById('nextStep1');
         const prevStep2 = document.getElementById('prevStep2');
         const nextStep2 = document.getElementById('nextStep2');
@@ -762,17 +1255,52 @@
         
         // Portal elements
         const themeToggle = document.getElementById('themeToggle');
-        const teacherPortalBtn = document.getElementById('teacherPortalBtn');
-        const studentPortalBtn = document.getElementById('studentPortalBtn');
         const teacherLogin = document.getElementById('teacherLogin');
         const studentLogin = document.getElementById('studentLogin');
         const backFromTeacherLogin = document.getElementById('backFromTeacherLogin');
         const backFromStudentLogin = document.getElementById('backFromStudentLogin');
         const teacherLoginBtn = document.getElementById('teacherLoginBtn');
-        const studentLoginBtn = document.getElementById('studentLoginBtn');
         const teacherSection = document.getElementById('teacherSection');
         const teacherSelect = document.getElementById('teacherSelect');
-        const studentSelect = document.getElementById('studentSelect');
+        
+        // Face recognition elements
+        const cameraVideo = document.getElementById('cameraVideo');
+        const cameraCanvas = document.getElementById('cameraCanvas');
+        const scanOverlay = document.getElementById('scanOverlay');
+        const scanStatus = document.getElementById('scanStatus');
+        const startScanBtn = document.getElementById('startScanBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        
+        // Dashboard elements
+        const teacherDashboard = document.getElementById('teacherDashboard');
+        const studentDashboard = document.getElementById('studentDashboard');
+        const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
+        const studentLogoutBtn = document.getElementById('studentLogoutBtn');
+        
+        // Teacher dashboard elements
+        const teacherName = document.getElementById('teacherName');
+        const teacherDetails = document.getElementById('teacherDetails');
+        const teacherAvatar = document.getElementById('teacherAvatar');
+        const studentList = document.getElementById('studentList');
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const assignHomeworkBtn = document.getElementById('assignHomeworkBtn');
+        const homeworkList = document.getElementById('homeworkList');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const messageList = document.getElementById('messageList');
+        
+        // Student dashboard elements
+        const studentName = document.getElementById('studentName');
+        const studentDetails = document.getElementById('studentDetails');
+        const studentAvatar = document.getElementById('studentAvatar');
+        const profileStudentImg = document.getElementById('profileStudentImg');
+        const profileStudentName = document.getElementById('profileStudentName');
+        const profileStudentClass = document.getElementById('profileStudentClass');
+        const profileDob = document.getElementById('profileDob');
+        const profileAdmissionNo = document.getElementById('profileAdmissionNo');
+        const profileRollNo = document.getElementById('profileRollNo');
+        const profileSchool = document.getElementById('profileSchool');
+        const studentHomeworkList = document.getElementById('studentHomeworkList');
+        const studentMessageList = document.getElementById('studentMessageList');
         
         // Text content for each step
         const stepTexts = [
@@ -795,15 +1323,22 @@
             ]
         };
         
-        // Sample students data
-        let students = [
-            { id: 1, name: "Rahul Sharma", class: "10A", password: "student123" },
-            { id: 2, name: "Priya Patel", class: "10A", password: "student123" },
-            { id: 3, name: "Amit Kumar", class: "10A", password: "student123" }
-        ];
+        // Students data - only students added by teachers can access
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        
+        // Sample data for homeworks and messages
+        let homeworks = JSON.parse(localStorage.getItem('homeworks')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
         
         // Current step
         let currentStep = 1;
+        
+        // Current user
+        let currentUser = null;
+        let currentUserType = null;
+        
+        // Camera stream
+        let stream = null;
         
         // Typing animation function
         function typeText(element, text, speed = 30) {
@@ -862,26 +1397,11 @@
             typeText(textElement, stepTexts[stepNumber - 1]);
         }
         
-        // Initialize onboarding
-        function initializeOnboarding() {
-            // Check if user has completed onboarding before
-            const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding');
-            
-            if (hasCompletedOnboarding) {
-                // Skip onboarding if already completed
-                onboarding.style.display = 'none';
-                portalContainer.classList.add('active');
-                
-                // Apply saved theme
-                const savedTheme = localStorage.getItem('theme');
-                if (savedTheme === 'dark') {
-                    document.body.setAttribute('data-theme', 'dark');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-            } else {
-                // Start with step 1
-                showStep(1);
-            }
+        // Start onboarding after login
+        function startOnboarding() {
+            loginPage.style.display = 'none';
+            onboarding.style.display = 'flex';
+            showStep(1);
         }
         
         // Theme selection
@@ -924,10 +1444,6 @@
         });
         
         // Onboarding navigation
-        skipOnboarding.addEventListener('click', () => {
-            completeOnboardingProcess();
-        });
-        
         nextStep1.addEventListener('click', () => {
             showStep(2);
         });
@@ -961,18 +1477,35 @@
         });
         
         completeOnboarding.addEventListener('click', () => {
-            completeOnboardingProcess();
-        });
-        
-        // Complete onboarding process
-        function completeOnboardingProcess() {
             // Mark onboarding as completed
             localStorage.setItem('hasCompletedOnboarding', 'true');
             
             // Hide onboarding and show portal
             onboarding.style.display = 'none';
             portalContainer.classList.add('active');
-        }
+        });
+        
+        // Login options
+        teacherLoginOption.addEventListener('click', () => {
+            startOnboarding();
+            // After onboarding, show teacher login
+            setTimeout(() => {
+                onboarding.style.display = 'none';
+                portalContainer.classList.add('active');
+                teacherLogin.classList.add('active');
+                populateTeacherDropdown();
+            }, 5000); // Show after onboarding completes
+        });
+        
+        studentLoginOption.addEventListener('click', () => {
+            startOnboarding();
+            // After onboarding, show student login
+            setTimeout(() => {
+                onboarding.style.display = 'none';
+                portalContainer.classList.add('active');
+                studentLogin.classList.add('active');
+            }, 5000); // Show after onboarding completes
+        });
         
         // Populate teacher dropdown based on section
         function populateTeacherDropdown() {
@@ -989,42 +1522,7 @@
             }
         }
         
-        // Populate student dropdown
-        function populateStudentDropdown() {
-            studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
-            students.forEach(student => {
-                const option = document.createElement('option');
-                option.value = student.id;
-                option.textContent = `${student.name} (Class ${student.class})`;
-                studentSelect.appendChild(option);
-            });
-        }
-        
-        // Portal navigation
-        teacherPortalBtn.addEventListener('click', () => {
-            document.getElementById('portalSelection').style.display = 'none';
-            teacherLogin.classList.add('active');
-            populateTeacherDropdown();
-        });
-        
-        studentPortalBtn.addEventListener('click', () => {
-            document.getElementById('portalSelection').style.display = 'none';
-            studentLogin.classList.add('active');
-            populateStudentDropdown();
-        });
-        
-        backFromTeacherLogin.addEventListener('click', () => {
-            teacherLogin.classList.remove('active');
-            document.getElementById('portalSelection').style.display = 'grid';
-        });
-        
-        backFromStudentLogin.addEventListener('click', () => {
-            studentLogin.classList.remove('active');
-            document.getElementById('portalSelection').style.display = 'grid';
-        });
-        
-        teacherSection.addEventListener('change', populateTeacherDropdown);
-        
+        // Teacher login
         teacherLoginBtn.addEventListener('click', () => {
             const password = document.getElementById('teacherPassword').value;
             const selectedTeacherId = teacherSelect.value;
@@ -1038,34 +1536,407 @@
             const teacher = teachers[section].find(t => t.id === selectedTeacherId);
             
             if (password === teacher.password && selectedTeacherId) {
-                alert(`Welcome, ${teacher.name}! Teacher dashboard would open here.`);
-                // In a real app, you would redirect to the teacher dashboard
+                // Set current user
+                currentUser = teacher;
+                currentUserType = 'teacher';
+                
+                // Update teacher dashboard
+                teacherName.textContent = teacher.name;
+                teacherDetails.textContent = `Kendriya Vidyalaya Malkapuram | ${teacher.subject}`;
+                teacherAvatar.src = "https://blogger.googleusercontent.com/img/a/AVvXsEiJY7J3N211LgvtEmXBQYBTrhyV4Msf-rXEkPr6Ns-BxAbOp-2rLh-V4MhUOj9pL0lhHjPbIbdYm7IxB3_wXggfa6hLq8iYu0e3NC9NThaTn61zBVjbFUgF3VPlYmS9BxqmolSzAQW1DYmUea5EiquLqysBntxklO7OQ6uBeZvCLLEkjaKnGaW7FMPakj0";
+                
+                // Hide login and show dashboard
+                teacherLogin.classList.remove('active');
+                teacherDashboard.classList.add('active');
+                
+                // Render students
+                renderStudents();
+                renderHomeworks();
+                renderMessages();
             } else {
                 alert('Please select a teacher and enter correct password.');
             }
         });
         
-        studentLoginBtn.addEventListener('click', () => {
-            const password = document.getElementById('studentPassword').value;
-            const selectedStudentId = studentSelect.value;
-            
-            if (!selectedStudentId) {
-                alert('Please select a student first.');
-                return;
-            }
-            
-            const student = students.find(s => s.id == selectedStudentId);
-            
-            if (password === student.password) {
-                alert(`Welcome, ${student.name}! Student dashboard would open here.`);
-                // In a real app, you would redirect to the student dashboard
-            } else {
-                alert('Please enter correct password.');
+        // Face recognition for student login
+        startScanBtn.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: 300, height: 300 } 
+                });
+                cameraVideo.srcObject = stream;
+                scanOverlay.style.display = 'none';
+                scanStatus.textContent = 'Position your face in the frame';
+                startScanBtn.style.display = 'none';
+                captureBtn.style.display = 'inline-block';
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                scanOverlay.querySelector('p').textContent = 'Camera access denied';
+                scanStatus.textContent = 'Camera access is required for face verification';
             }
         });
         
+        captureBtn.addEventListener('click', () => {
+            // Capture image from camera
+            const context = cameraCanvas.getContext('2d');
+            context.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+            const imageData = cameraCanvas.toDataURL('image/png');
+            
+            // Stop camera
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Verify face against stored students
+            const verifiedStudent = verifyFace(imageData);
+            
+            if (verifiedStudent) {
+                scanStatus.textContent = 'Face verified successfully!';
+                
+                // Set current user
+                currentUser = verifiedStudent;
+                currentUserType = 'student';
+                
+                // Update student dashboard
+                studentName.textContent = verifiedStudent.name;
+                studentDetails.textContent = `Class ${verifiedStudent.class} | Roll No: ${verifiedStudent.rollNo}`;
+                
+                profileStudentName.textContent = verifiedStudent.name;
+                profileStudentClass.textContent = `Class ${verifiedStudent.class}`;
+                profileDob.textContent = formatDate(verifiedStudent.dob);
+                profileAdmissionNo.textContent = verifiedStudent.admissionNo;
+                profileRollNo.textContent = verifiedStudent.rollNo;
+                profileSchool.textContent = "Kendriya Vidyalaya Malkapuram";
+                
+                if (verifiedStudent.image) {
+                    studentAvatar.src = verifiedStudent.image;
+                    profileStudentImg.src = verifiedStudent.image;
+                }
+                
+                // Hide login and show dashboard after delay
+                setTimeout(() => {
+                    studentLogin.classList.remove('active');
+                    studentDashboard.classList.add('active');
+                    
+                    // Render student data
+                    renderStudentHomework();
+                    renderStudentMessages();
+                }, 1500);
+            } else {
+                scanStatus.textContent = 'Face verification failed. You are not registered in our system.';
+                captureBtn.style.display = 'none';
+                startScanBtn.style.display = 'inline-block';
+            }
+        });
+        
+        // Simple face verification (in real app, this would use proper face recognition API)
+        function verifyFace(capturedImage) {
+            // Check if any student's face matches (simplified for demo)
+            // In a real application, this would compare facial features
+            if (students.length === 0) {
+                return null;
+            }
+            
+            // For demo purposes, we'll just return the first student
+            // In a real app, this would use proper face recognition
+            return students[0];
+        }
+        
+        // Teacher dashboard functions
+        function renderStudents() {
+            studentList.innerHTML = '';
+            if (students.length === 0) {
+                studentList.innerHTML = '<p>No students added yet. Add students using the form above.</p>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.innerHTML = `
+                    <div class="student-img">
+                        ${student.image ? `<img src="${student.image}" alt="${student.name}">` : `<i class="fas fa-user"></i>`}
+                    </div>
+                    <h4>${student.name}</h4>
+                    <p>Class: ${student.class}</p>
+                    <p>Roll No: ${student.rollNo}</p>
+                `;
+                studentList.appendChild(studentCard);
+            });
+        }
+        
+        function renderHomeworks() {
+            homeworkList.innerHTML = '';
+            if (homeworks.length === 0) {
+                homeworkList.innerHTML = '<p>No homework assigned yet.</p>';
+                return;
+            }
+            
+            homeworks.forEach(homework => {
+                const homeworkItem = document.createElement('div');
+                homeworkItem.className = 'homework-item';
+                homeworkItem.innerHTML = `
+                    <h4>${homework.title}</h4>
+                    <p>${homework.description}</p>
+                    <div class="homework-meta">
+                        <span>Due: ${formatDate(homework.dueDate)}</span>
+                        <span>Assigned: ${formatDate(homework.assignedDate)}</span>
+                    </div>
+                `;
+                homeworkList.appendChild(homeworkItem);
+            });
+        }
+        
+        function renderMessages() {
+            messageList.innerHTML = '';
+            if (messages.length === 0) {
+                messageList.innerHTML = '<p>No messages sent yet.</p>';
+                return;
+            }
+            
+            messages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <h4>${message.title}</h4>
+                    <p>${message.content}</p>
+                    <div class="message-meta">
+                        <span>${formatDate(message.date)}</span>
+                    </div>
+                `;
+                messageList.appendChild(messageItem);
+            });
+        }
+        
+        // Add student function
+        addStudentBtn.addEventListener('click', () => {
+            const imageFile = document.getElementById('studentImage').files[0];
+            const name = document.getElementById('studentName').value;
+            const dob = document.getElementById('studentDob').value;
+            const admissionNo = document.getElementById('studentAdmissionNo').value;
+            const rollNo = document.getElementById('studentRollNo').value;
+            
+            if (!imageFile) {
+                alert('Please upload a student image for face recognition.');
+                return;
+            }
+            
+            if (!name || !dob || !admissionNo || !rollNo) {
+                alert('Please fill all fields.');
+                return;
+            }
+            
+            // Convert image to base64 for storage
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newStudent = {
+                    id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
+                    name,
+                    dob,
+                    admissionNo,
+                    rollNo: parseInt(rollNo),
+                    class: "10A", // Default class for demo
+                    image: e.target.result
+                };
+                
+                students.push(newStudent);
+                localStorage.setItem('students', JSON.stringify(students));
+                renderStudents();
+                
+                // Clear form
+                document.getElementById('studentImage').value = '';
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentDob').value = '';
+                document.getElementById('studentAdmissionNo').value = '';
+                document.getElementById('studentRollNo').value = '';
+                
+                alert('Student added successfully! This student can now access the student portal with face recognition.');
+            };
+            reader.readAsDataURL(imageFile);
+        });
+        
+        // Student dashboard functions
+        function renderStudentHomework() {
+            studentHomeworkList.innerHTML = '';
+            if (homeworks.length === 0) {
+                studentHomeworkList.innerHTML = '<p>No homework assigned yet.</p>';
+                return;
+            }
+            
+            homeworks.forEach(homework => {
+                const homeworkItem = document.createElement('div');
+                homeworkItem.className = 'homework-item';
+                homeworkItem.innerHTML = `
+                    <h4>${homework.title}</h4>
+                    <p>${homework.description}</p>
+                    <div class="homework-meta">
+                        <span>Due: ${formatDate(homework.dueDate)}</span>
+                        <span>Assigned: ${formatDate(homework.assignedDate)}</span>
+                    </div>
+                `;
+                studentHomeworkList.appendChild(homeworkItem);
+            });
+        }
+        
+        function renderStudentMessages() {
+            studentMessageList.innerHTML = '';
+            if (messages.length === 0) {
+                studentMessageList.innerHTML = '<p>No messages yet.</p>';
+                return;
+            }
+            
+            messages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <h4>${message.title}</h4>
+                    <p>${message.content}</p>
+                    <div class="message-meta">
+                        <span>${formatDate(message.date)}</span>
+                    </div>
+                `;
+                studentMessageList.appendChild(messageItem);
+            });
+        }
+        
+        // Assign homework
+        assignHomeworkBtn.addEventListener('click', () => {
+            const title = document.getElementById('homeworkTitle').value;
+            const description = document.getElementById('homeworkDescription').value;
+            const dueDate = document.getElementById('homeworkDueDate').value;
+            
+            if (!title || !description || !dueDate) {
+                alert('Please fill all fields.');
+                return;
+            }
+            
+            const newHomework = {
+                id: homeworks.length + 1,
+                title,
+                description,
+                dueDate,
+                assignedDate: new Date().toISOString().split('T')[0]
+            };
+            
+            homeworks.unshift(newHomework);
+            localStorage.setItem('homeworks', JSON.stringify(homeworks));
+            renderHomeworks();
+            
+            // Clear form
+            document.getElementById('homeworkTitle').value = '';
+            document.getElementById('homeworkDescription').value = '';
+            document.getElementById('homeworkDueDate').value = '';
+            
+            alert('Homework assigned successfully!');
+        });
+        
+        // Send message
+        sendMessageBtn.addEventListener('click', () => {
+            const title = document.getElementById('messageTitle').value;
+            const content = document.getElementById('messageContent').value;
+            
+            if (!title || !content) {
+                alert('Please fill all fields.');
+                return;
+            }
+            
+            const newMessage = {
+                id: messages.length + 1,
+                title,
+                content,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            messages.unshift(newMessage);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            renderMessages();
+            
+            // Clear form
+            document.getElementById('messageTitle').value = '';
+            document.getElementById('messageContent').value = '';
+            
+            alert('Message sent successfully!');
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show active tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}Tab`) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Navigation back buttons
+        backFromTeacherLogin.addEventListener('click', () => {
+            teacherLogin.classList.remove('active');
+        });
+        
+        backFromStudentLogin.addEventListener('click', () => {
+            studentLogin.classList.remove('active');
+        });
+        
+        teacherSection.addEventListener('change', populateTeacherDropdown);
+        
+        // Logout functionality
+        teacherLogoutBtn.addEventListener('click', () => {
+            teacherDashboard.classList.remove('active');
+            document.getElementById('teacherPassword').value = '';
+            currentUser = null;
+            currentUserType = null;
+            
+            // Return to login page
+            portalContainer.classList.remove('active');
+            loginPage.style.display = 'flex';
+        });
+        
+        studentLogoutBtn.addEventListener('click', () => {
+            studentDashboard.classList.remove('active');
+            currentUser = null;
+            currentUserType = null;
+            
+            // Return to login page
+            portalContainer.classList.remove('active');
+            loginPage.style.display = 'flex';
+        });
+        
+        // Helper function to format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
         // Initialize the application
-        window.addEventListener('load', initializeOnboarding);
+        window.addEventListener('load', () => {
+            // Apply saved theme if exists
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Check if user has completed onboarding before
+            const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding');
+            
+            if (hasCompletedOnboarding) {
+                // Skip onboarding if already completed
+                loginPage.style.display = 'flex';
+            } else {
+                // Show login page by default
+                loginPage.style.display = 'flex';
+            }
+        });
     </script>
 </body>
 </html>
