@@ -5,48 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduXpress</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e40af;
-            --secondary: #64748b;
-            --accent: #60a5fa;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --background: #ffffff;
-            --card-bg: #f8fafc;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --primary: #0d47a1;
+            --primary-light: #5472d3;
+            --primary-dark: #002171;
+            --secondary: #546e7a;
+            --accent: #82b1ff;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --text: #e0e0e0;
+            --text-muted: #9e9e9e;
+            --border: #424242;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(66, 133, 244, 0.3);
             --radius: 12px;
             --radius-full: 50%;
+            --glow: 0 0 10px rgba(66, 133, 244, 0.7);
         }
 
-        [data-theme="dark"] {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e40af;
-            --secondary: #64748b;
-            --accent: #60a5fa;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --background: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        [data-theme="light"] {
+            --primary: #0d47a1;
+            --primary-light: #5472d3;
+            --primary-dark: #002171;
+            --secondary: #546e7a;
+            --accent: #82b1ff;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+            --background: #f5f5f5;
+            --card-bg: #ffffff;
+            --text: #212121;
+            --text-muted: #757575;
+            --border: #e0e0e0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(66, 133, 244, 0.2);
+            --glow: 0 0 10px rgba(66, 133, 244, 0.5);
         }
 
         body {
@@ -106,6 +109,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: var(--glow);
         }
 
         .login-subtitle {
@@ -136,7 +140,7 @@
 
         .login-option:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), var(--glow);
             border-color: var(--primary-light);
         }
 
@@ -257,12 +261,13 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: var(--shadow);
         }
 
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), var(--glow);
         }
 
         .btn:active {
@@ -274,7 +279,7 @@
         }
 
         .btn-secondary:hover {
-            background: #475569;
+            background: #455a64;
         }
 
         .btn-success {
@@ -282,7 +287,7 @@
         }
 
         .btn-success:hover {
-            background: #0da271;
+            background: #00b248;
         }
 
         .theme-selection {
@@ -300,11 +305,13 @@
             border: 2px solid var(--border);
             text-align: center;
             flex: 1;
+            box-shadow: var(--shadow);
         }
 
         .theme-option:hover {
             transform: translateY(-5px);
             border-color: var(--primary-light);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), var(--glow);
         }
 
         .theme-option.selected {
@@ -752,6 +759,102 @@
             transform: scale(1.2);
         }
 
+        /* Subject Selection Styles */
+        .subject-selection {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .subject-selection.active {
+            display: block;
+        }
+
+        .back-to-dashboard {
+            margin-bottom: 20px;
+        }
+
+        .class-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .class-btn {
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .class-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .class-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .subjects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
+        }
+
+        .subject-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .subject-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .subject-content.active {
+            display: block;
+        }
+
+        .ncert-btn, .solution-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .onboarding-image {
@@ -793,6 +896,14 @@
             .camera-container {
                 width: 250px;
                 height: 250px;
+            }
+            
+            .class-selection {
+                flex-direction: column;
+            }
+            
+            .subjects-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1053,6 +1164,36 @@
                             <input type="text" id="studentName" class="form-control" placeholder="Enter student full name">
                         </div>
                         <div class="form-group">
+                            <label for="studentClass">Class</label>
+                            <select id="studentClass" class="form-control">
+                                <option value="">-- Select Class --</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11A">Class 11A</option>
+                                <option value="11B">Class 11B</option>
+                                <option value="11C">Class 11C</option>
+                                <option value="12A">Class 12A</option>
+                                <option value="12B">Class 12B</option>
+                                <option value="12C">Class 12C</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="streamSelection" style="display: none;">
+                            <label for="studentStream">Select Stream</label>
+                            <select id="studentStream" class="form-control">
+                                <option value="">-- Select Stream --</option>
+                                <option value="MPC">MPC</option>
+                                <option value="BIPC">BIPC</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="studentDob">Date of Birth</label>
                             <input type="date" id="studentDob" class="form-control">
                         </div>
@@ -1157,6 +1298,7 @@
                     <button class="tab active" data-tab="profile">My Profile</button>
                     <button class="tab" data-tab="studentHomework">Homework</button>
                     <button class="tab" data-tab="studentMessages">Messages</button>
+                    <button class="tab" data-tab="subjects">Subjects</button>
                 </div>
 
                 <div class="tab-content active" id="profileTab">
@@ -1204,6 +1346,29 @@
                         </div>
                         <div id="studentMessageList">
                             <!-- Student message items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="subjectsTab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Subject Resources</h3>
+                        </div>
+                        <div class="subject-selection" id="subjectSelection">
+                            <button class="btn btn-secondary back-to-dashboard" id="backToDashboard">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </button>
+                            <h3 style="margin-bottom: 20px;">Select Your Class</h3>
+                            <div class="class-selection" id="classSelection">
+                                <!-- Class buttons will be dynamically added here -->
+                            </div>
+                            <div class="subjects-container" id="subjectsContainer">
+                                <!-- Subject cards will be dynamically added here -->
+                            </div>
+                            <div class="subject-content" id="subjectContent">
+                                <!-- Subject content will be dynamically added here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1287,6 +1452,9 @@
         const homeworkList = document.getElementById('homeworkList');
         const sendMessageBtn = document.getElementById('sendMessageBtn');
         const messageList = document.getElementById('messageList');
+        const studentClass = document.getElementById('studentClass');
+        const streamSelection = document.getElementById('streamSelection');
+        const studentStream = document.getElementById('studentStream');
         
         // Student dashboard elements
         const studentName = document.getElementById('studentName');
@@ -1301,6 +1469,13 @@
         const profileSchool = document.getElementById('profileSchool');
         const studentHomeworkList = document.getElementById('studentHomeworkList');
         const studentMessageList = document.getElementById('studentMessageList');
+        
+        // Subject selection elements
+        const subjectSelection = document.getElementById('subjectSelection');
+        const classSelection = document.getElementById('classSelection');
+        const subjectsContainer = document.getElementById('subjectsContainer');
+        const subjectContent = document.getElementById('subjectContent');
+        const backToDashboard = document.getElementById('backToDashboard');
         
         // Text content for each step
         const stepTexts = [
@@ -1339,6 +1514,86 @@
         
         // Camera stream
         let stream = null;
+        
+        // Subject data
+        const subjects = {
+            "1-5": [
+                { name: "EVS", icon: "fas fa-leaf" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Hindi", icon: "fas fa-book" },
+                { name: "Maths", icon: "fas fa-calculator" },
+                { name: "Computer", icon: "fas fa-laptop" }
+            ],
+            "6-10": [
+                { name: "Science", icon: "fas fa-flask" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Maths", icon: "fas fa-calculator" },
+                { name: "Hindi", icon: "fas fa-book" },
+                { name: "Sanskrit", icon: "fas fa-scroll" },
+                { name: "Computer", icon: "fas fa-laptop" },
+                { name: "A.I.", icon: "fas fa-robot" }
+            ],
+            "11A-MPC": [
+                { name: "Maths", icon: "fas fa-calculator" },
+                { name: "Physics", icon: "fas fa-atom" },
+                { name: "Chemistry", icon: "fas fa-flask" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Computer Science", icon: "fas fa-laptop-code" },
+                { name: "A.I.", icon: "fas fa-robot" }
+            ],
+            "11A-BIPC": [
+                { name: "Biology", icon: "fas fa-dna" },
+                { name: "Physics", icon: "fas fa-atom" },
+                { name: "Chemistry", icon: "fas fa-flask" },
+                { name: "Hindi", icon: "fas fa-book" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "A.I.", icon: "fas fa-robot" }
+            ],
+            "11B": [
+                { name: "Accountancy", icon: "fas fa-file-invoice-dollar" },
+                { name: "Business Studies", icon: "fas fa-chart-line" },
+                { name: "Economics", icon: "fas fa-money-bill-wave" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Maths", icon: "fas fa-calculator" }
+            ],
+            "11C": [
+                { name: "History", icon: "fas fa-landmark" },
+                { name: "Political Science", icon: "fas fa-balance-scale" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Geography", icon: "fas fa-globe-asia" },
+                { name: "Maths", icon: "fas fa-calculator" }
+            ],
+            "12A-MPC": [
+                { name: "Maths", icon: "fas fa-calculator" },
+                { name: "Physics", icon: "fas fa-atom" },
+                { name: "Chemistry", icon: "fas fa-flask" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Computer Science", icon: "fas fa-laptop-code" },
+                { name: "A.I.", icon: "fas fa-robot" }
+            ],
+            "12A-BIPC": [
+                { name: "Biology", icon: "fas fa-dna" },
+                { name: "Physics", icon: "fas fa-atom" },
+                { name: "Chemistry", icon: "fas fa-flask" },
+                { name: "Hindi", icon: "fas fa-book" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "A.I.", icon: "fas fa-robot" }
+            ],
+            "12B": [
+                { name: "Accountancy", icon: "fas fa-file-invoice-dollar" },
+                { name: "Business Studies", icon: "fas fa-chart-line" },
+                { name: "Economics", icon: "fas fa-money-bill-wave" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Maths", icon: "fas fa-calculator" }
+            ],
+            "12C": [
+                { name: "History", icon: "fas fa-landmark" },
+                { name: "Political Science", icon: "fas fa-balance-scale" },
+                { name: "English", icon: "fas fa-language" },
+                { name: "Geography", icon: "fas fa-globe-asia" },
+                { name: "Maths", icon: "fas fa-calculator" }
+            ]
+        };
         
         // Typing animation function
         function typeText(element, text, speed = 30) {
@@ -1488,23 +1743,10 @@
         // Login options
         teacherLoginOption.addEventListener('click', () => {
             startOnboarding();
-            // After onboarding, show teacher login
-            setTimeout(() => {
-                onboarding.style.display = 'none';
-                portalContainer.classList.add('active');
-                teacherLogin.classList.add('active');
-                populateTeacherDropdown();
-            }, 5000); // Show after onboarding completes
         });
         
         studentLoginOption.addEventListener('click', () => {
             startOnboarding();
-            // After onboarding, show student login
-            setTimeout(() => {
-                onboarding.style.display = 'none';
-                portalContainer.classList.add('active');
-                studentLogin.classList.add('active');
-            }, 5000); // Show after onboarding completes
         });
         
         // Populate teacher dropdown based on section
@@ -1622,6 +1864,7 @@
                     // Render student data
                     renderStudentHomework();
                     renderStudentMessages();
+                    renderClassSelection();
                 }, 1500);
             } else {
                 scanStatus.textContent = 'Face verification failed. You are not registered in our system.';
@@ -1713,6 +1956,8 @@
         addStudentBtn.addEventListener('click', () => {
             const imageFile = document.getElementById('studentImage').files[0];
             const name = document.getElementById('studentName').value;
+            const classVal = document.getElementById('studentClass').value;
+            const streamVal = document.getElementById('studentStream').value;
             const dob = document.getElementById('studentDob').value;
             const admissionNo = document.getElementById('studentAdmissionNo').value;
             const rollNo = document.getElementById('studentRollNo').value;
@@ -1722,7 +1967,7 @@
                 return;
             }
             
-            if (!name || !dob || !admissionNo || !rollNo) {
+            if (!name || !classVal || !dob || !admissionNo || !rollNo) {
                 alert('Please fill all fields.');
                 return;
             }
@@ -1733,10 +1978,11 @@
                 const newStudent = {
                     id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
                     name,
+                    class: classVal,
+                    stream: streamVal,
                     dob,
                     admissionNo,
                     rollNo: parseInt(rollNo),
-                    class: "10A", // Default class for demo
                     image: e.target.result
                 };
                 
@@ -1747,6 +1993,8 @@
                 // Clear form
                 document.getElementById('studentImage').value = '';
                 document.getElementById('studentName').value = '';
+                document.getElementById('studentClass').value = '';
+                document.getElementById('studentStream').value = '';
                 document.getElementById('studentDob').value = '';
                 document.getElementById('studentAdmissionNo').value = '';
                 document.getElementById('studentRollNo').value = '';
@@ -1799,6 +2047,153 @@
                 studentMessageList.appendChild(messageItem);
             });
         }
+        
+        // Render class selection for subjects
+        function renderClassSelection() {
+            classSelection.innerHTML = '';
+            
+            const classes = [
+                { name: "Class 1-5", value: "1-5" },
+                { name: "Class 6-10", value: "6-10" },
+                { name: "Class 11A", value: "11A" },
+                { name: "Class 11B", value: "11B" },
+                { name: "Class 11C", value: "11C" },
+                { name: "Class 12A", value: "12A" },
+                { name: "Class 12B", value: "12B" },
+                { name: "Class 12C", value: "12C" }
+            ];
+            
+            classes.forEach(classItem => {
+                const classBtn = document.createElement('button');
+                classBtn.className = 'class-btn';
+                classBtn.textContent = classItem.name;
+                classBtn.setAttribute('data-class', classItem.value);
+                classBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.class-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    classBtn.classList.add('active');
+                    renderSubjects(classItem.value);
+                });
+                classSelection.appendChild(classBtn);
+            });
+        }
+        
+        // Render subjects based on selected class
+        function renderSubjects(classValue) {
+            subjectsContainer.innerHTML = '';
+            subjectContent.classList.remove('active');
+            
+            let subjectList = [];
+            
+            if (classValue === "1-5") {
+                subjectList = subjects["1-5"];
+            } else if (classValue === "6-10") {
+                subjectList = subjects["6-10"];
+            } else if (classValue === "11A") {
+                // Show stream selection for 11A
+                const streamSelectionDiv = document.createElement('div');
+                streamSelectionDiv.innerHTML = `
+                    <h3 style="margin-bottom: 15px;">Select Your Stream</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <button class="btn" id="mpcBtn">MPC</button>
+                        <button class="btn" id="bipcBtn">BIPC</button>
+                    </div>
+                `;
+                subjectsContainer.appendChild(streamSelectionDiv);
+                
+                document.getElementById('mpcBtn').addEventListener('click', () => {
+                    renderSubjectCards(subjects["11A-MPC"]);
+                });
+                
+                document.getElementById('bipcBtn').addEventListener('click', () => {
+                    renderSubjectCards(subjects["11A-BIPC"]);
+                });
+                
+                return;
+            } else if (classValue === "11B") {
+                subjectList = subjects["11B"];
+            } else if (classValue === "11C") {
+                subjectList = subjects["11C"];
+            } else if (classValue === "12A") {
+                // Show stream selection for 12A
+                const streamSelectionDiv = document.createElement('div');
+                streamSelectionDiv.innerHTML = `
+                    <h3 style="margin-bottom: 15px;">Select Your Stream</h3>
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <button class="btn" id="mpcBtn12">MPC</button>
+                        <button class="btn" id="bipcBtn12">BIPC</button>
+                    </div>
+                `;
+                subjectsContainer.appendChild(streamSelectionDiv);
+                
+                document.getElementById('mpcBtn12').addEventListener('click', () => {
+                    renderSubjectCards(subjects["12A-MPC"]);
+                });
+                
+                document.getElementById('bipcBtn12').addEventListener('click', () => {
+                    renderSubjectCards(subjects["12A-BIPC"]);
+                });
+                
+                return;
+            } else if (classValue === "12B") {
+                subjectList = subjects["12B"];
+            } else if (classValue === "12C") {
+                subjectList = subjects["12C"];
+            }
+            
+            renderSubjectCards(subjectList);
+        }
+        
+        // Render subject cards
+        function renderSubjectCards(subjectList) {
+            subjectsContainer.innerHTML = '';
+            
+            subjectList.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                subjectCard.innerHTML = `
+                    <div class="subject-icon">
+                        <i class="${subject.icon}"></i>
+                    </div>
+                    <h3>${subject.name}</h3>
+                `;
+                subjectCard.addEventListener('click', () => {
+                    showSubjectContent(subject.name);
+                });
+                subjectsContainer.appendChild(subjectCard);
+            });
+        }
+        
+        // Show subject content
+        function showSubjectContent(subjectName) {
+            subjectsContainer.style.display = 'none';
+            subjectContent.classList.add('active');
+            subjectContent.innerHTML = `
+                <h3 style="margin-bottom: 20px;">${subjectName}</h3>
+                <button class="btn ncert-btn btn-block" style="margin-bottom: 10px;">
+                    <i class="fas fa-book"></i> NCERT
+                </button>
+                <button class="btn solution-btn btn-block">
+                    <i class="fas fa-check-circle"></i> Solution
+                </button>
+            `;
+            
+            // Add event listeners for NCERT and Solution buttons
+            document.querySelector('.ncert-btn').addEventListener('click', () => {
+                alert(`NCERT content for ${subjectName} would be displayed here.`);
+            });
+            
+            document.querySelector('.solution-btn').addEventListener('click', () => {
+                alert(`Solution content for ${subjectName} would be displayed here.`);
+            });
+        }
+        
+        // Back to dashboard from subject content
+        backToDashboard.addEventListener('click', () => {
+            subjectContent.classList.remove('active');
+            subjectsContainer.style.display = 'grid';
+        });
         
         // Assign homework
         assignHomeworkBtn.addEventListener('click', () => {
@@ -1888,6 +2283,15 @@
         });
         
         teacherSection.addEventListener('change', populateTeacherDropdown);
+        
+        // Show/hide stream selection based on class
+        studentClass.addEventListener('change', () => {
+            if (studentClass.value === '11A') {
+                streamSelection.style.display = 'block';
+            } else {
+                streamSelection.style.display = 'none';
+            }
+        });
         
         // Logout functionality
         teacherLogoutBtn.addEventListener('click', () => {
